@@ -11,7 +11,7 @@ import {
 
 class RutaItem extends React.Component {
   HandleButton(id){
-    Actions.rutaInformation({
+    Actions.routeDirection({
       rutaId: id,
     });
   }
