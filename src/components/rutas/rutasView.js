@@ -9,7 +9,12 @@ class RutasView extends React.Component {
 	constructor(){
 		super();
 		this.state ={
-			rutas :[
+			rutas :[]
+		}
+	}
+
+	componentWillMount(){
+		this.setState({rutas: [
 				{
 				id: '0',
 				nombre: 'ruta 1'
@@ -22,10 +27,8 @@ class RutasView extends React.Component {
 				id: '2',
 				nombre: 'ruta 3'
 				}
-			]
-		}
+		]});
 	}
-
 	render(){
 		return (
 			<View>
