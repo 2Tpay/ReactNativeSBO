@@ -17,7 +17,7 @@ class Home extends React.Component {
 					Hello Home
 				</Text>
 				<TouchableOpacity onPress = { () => {
-							Actions.rutas();
+							Actions.rutasView();
 					}}
 					>
 					<Text>

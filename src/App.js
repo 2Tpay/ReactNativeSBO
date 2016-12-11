@@ -1,8 +1,7 @@
 import React from 'react';
 
 import Home from './components/home';
-import Rutas from './components/rutas';
-
+import RutasView from './components/rutas/rutasView';
 import {
   Router,
   Scene,
@@ -18,7 +17,7 @@ class App extends React.Component {
       <Router>
         <Scene key='root' style = {{paddingTop: Platform.OS ==='ios'? 64: 54}}>
           <Scene key='home' component={Home} title='Home' />
-          <Scene key='rutas' component={Rutas} title='Rutas' />
+          <Scene key='rutasView' component={RutasView} title='Rutas' />
         </Scene>
       </Router>
     );
