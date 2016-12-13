@@ -7,7 +7,7 @@ class RutaInformation extends React.Component {
   render(){
     return (
       <Text>
-        vista de informacion - {this.props.rutaId}
+        vista de informacion - 
       </Text>
     );
   }
