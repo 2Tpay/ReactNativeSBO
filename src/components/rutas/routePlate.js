@@ -24,7 +24,7 @@ class RoutePlate extends React.Component {
   }
 
   HandleButton(id, direction){
-     Actions.routePlate({
+     Actions.scanningView({
       rutaId: id,
       routeDirection: direction,
     });
