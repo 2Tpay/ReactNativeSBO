@@ -1,12 +1,13 @@
 import React from 'react';
 import {searchUser} from '../api/requester';
-import {debounce} from 'lodash'
+import {debounce} from 'lodash';
 import {
   View,
   Text,
   TextInput,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from 'react-native'
 
 import {
@@ -19,11 +20,16 @@ class ScanningView extends React.Component {
     super();
     this.state = {
       user_details : [],
-      counter : 0
-    }
+      counter : 0,
+      text: "Escriba el texto"
+    };
+
+    AsyncStorage.getItem("text").then((value) => {
+      this.setState({text: value});
+    }).done();
   }
   HandleButton(){
-    Actions.home()
+    Actions.pop({popNum: 4});
   }
   searchUser = debounce(carnet => {
       if(carnet != ''){
@@ -47,6 +53,9 @@ class ScanningView extends React.Component {
     return (
       <View>
         <Text>
+            Placa: { this.state.text }
+        </Text>
+        <Text>
           Num. Pasajeros: {this.state.counter}
         </Text>
         <Text>
@@ -68,7 +77,8 @@ class ScanningView extends React.Component {
     );
   }
 }
-var style = StyleSheet.create({
+
+let style = StyleSheet.create({
   hr: {
     alignItems:'center',
     width: 300,
