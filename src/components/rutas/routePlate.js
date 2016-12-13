@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   Text,
   TextInput,
@@ -13,22 +12,25 @@ import {
   Actions
 } from 'react-native-router-flux';
 
+//import ScanningView from '../scanner/scanningView';
+
 class RoutePlate extends React.Component {
   constructor(){
     super();
     this.state = {text: "Escriba el texto"};
 
-    AsyncStorage.getItem("text").then((value) => {
-      this.setState({text: value});
-    }).done();
+    //AsyncStorage.getItem("text").then((value) => {
+      // this.setState({text: value});
+    // }).done();
   }
 
   HandleButton(id, direction){
-     Actions.routePlate({
-      rutaId: id,
-      routeDirection: direction,
-    });
-    console.log("Id " + id);
+    //  Actions.ScanningView({
+      //rutaId: id,
+      //routeDirection: direction,
+    // });
+    // Actions.pop({popNum: 2});
+    Actions.scanningView();
   }
 
   saveData(value) {

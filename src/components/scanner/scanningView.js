@@ -1,21 +1,26 @@
 import React from 'react';
 import {searchUser} from '../api/requester';
-import {debounce} from 'lodash'
+import {debounce} from 'lodash';
 import {
   View,
   Text,
   TextInput,
-  StyleSheet
-} from 'react-native'
-//import { Container, Hr} from 'native-base
+  StyleSheet,
+  AsyncStorage
+} from 'react-native';
 
 class ScanningView extends React.Component {
   constructor(){
     super();
     this.state = {
       user_details : [],
-      counter : 0
-    }
+      counter : 0,
+      text: "Escriba el texto"
+    };
+
+    AsyncStorage.getItem("text").then((value) => {
+      this.setState({text: value});
+    }).done();
   }
 
   searchUser = debounce(carnet => {
@@ -35,6 +40,9 @@ class ScanningView extends React.Component {
     return (
       <View>
         <Text>
+            Placa: { this.state.text }
+        </Text>
+        <Text>
           Num. Pasajeros: {this.state.counter}
         </Text>
         <Text>
@@ -51,7 +59,8 @@ class ScanningView extends React.Component {
     );
   }
 }
-var style = StyleSheet.create({
+
+let style = StyleSheet.create({
   hr: {
     alignItems:'center',
     width: 300,

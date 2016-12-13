@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 import {
-  Actions,
+  Actions
 } from 'react-native-router-flux';
 
 class RouteDirection extends React.Component {
