@@ -17,7 +17,10 @@ import {
 class RoutePlate extends React.Component {
   constructor(){
     super();
-    this.state = {text: "Escriba el texto"};
+    this.state = {
+      busPlate: "",
+      text: "Escriba el texto"
+    };
 
     //AsyncStorage.getItem("text").then((value) => {
       // this.setState({text: value});
@@ -26,15 +29,16 @@ class RoutePlate extends React.Component {
 
   HandleButton(id, direction){
      Actions.scanningView({
-      rutaId: id,
+      routeId: id,
       routeDirection: direction,
+      busPlate: this.state.busPlate
     });
     // Actions.pop({popNum: 2});
   }
 
   saveData(value) {
     AsyncStorage.setItem("text", value);
-    this.setState({text: value})
+    this.setState({busPlate: value})
     console.log("Saving..." + this.state.text);
   }
 

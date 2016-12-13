@@ -20,8 +20,7 @@ class ScanningView extends React.Component {
     super();
     this.state = {
       user_details : [],
-      counter : 0,
-      text: "Escriba el texto"
+      counter : 0
     };
 
     AsyncStorage.getItem("text").then((value) => {
@@ -31,7 +30,7 @@ class ScanningView extends React.Component {
   HandleButton(){
     Actions.pop({popNum: 4});
   }
-  searchUser = debounce(carnet => {
+  searchUserByCarnet(carnet){
       if(carnet != ''){
        searchUser(carnet)
         .then(response => {
@@ -41,28 +40,39 @@ class ScanningView extends React.Component {
           this.setState({
             user_details : response,
             counter: response.length <=0? this.state.counter: this.state.counter +1,
+            userCarnet: "",
           });
         })
         .catch((error) => {
           throw error;
         });
       }
-  },400);
+  }
 
   render(){
     return (
       <View>
-        <Text>
-            Placa: { this.state.text }
-        </Text>
+        <Text>Bus en direccion: {this.props.routeDirection} - {this.props.routeId}</Text>
+        <Text>Placa: { this.props.busPlate}</Text>
         <Text>
           Num. Pasajeros: {this.state.counter}
         </Text>
         <Text>
           Carnet:
         </Text>
-        <TextInput onChangeText={this.searchUser.bind(this)}/>
-        <View style={style.hr}></View>
+        <TextInput onChangeText={(text)=>
+          {
+            this.setState({
+              user_details: this.state.user_details,
+              counter: this.state.counter,
+              userCarnet: text
+            });
+          }
+        }/>
+      <TouchableOpacity onPress={this.searchUserByCarnet.bind(this, this.state.userCarnet)}>
+            <Text>Ingresar</Text>
+          </TouchableOpacity>
+      <View style={style.hr}></View>
 
         <View>
           <Text>Carnet: {this.state.user_details.name}</Text>
