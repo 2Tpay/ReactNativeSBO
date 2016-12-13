@@ -6,6 +6,7 @@ import RutaInformation from './components/rutas/rutaInformation';
 import RouteDirection from './components/rutas/routeDirection';
 import RoutePlate from './components/rutas/routePlate';
 
+import ScanningView from './components/scanner/scanningView';
 import {
   Router,
   Scene,
@@ -25,6 +26,7 @@ class App extends React.Component {
           <Scene key='rutaInformation' component={RutaInformation} title='Informacion de Ruta' />
           <Scene key='routeDirection' component={RouteDirection} title='Entra o Salida de Ruta' />
           <Scene key='routePlate' component={RoutePlate} title='Ingreso de placa' />
+          <Scene key='scanningView' component={ScanningView} title='Escaner' />
         </Scene>
       </Router>
     );
