@@ -1,36 +1,56 @@
 import React from 'react';
-
 import {
   Text,
   TextInput,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage,
+  StyleSheet
 } from 'react-native';
 
 import {
   Actions
 } from 'react-native-router-flux';
 
+//import ScanningView from '../scanner/scanningView';
+
 class RoutePlate extends React.Component {
+  constructor(){
+    super();
+    this.state = {text: "Escriba el texto"};
+
+    //AsyncStorage.getItem("text").then((value) => {
+      // this.setState({text: value});
+    // }).done();
+  }
+
   HandleButton(id, direction){
-    /* Actions.routePlate({
-      rutaId: id,
-      routeDirection: direction,
-    });*/
-    console.log("Id " + id);
+    //  Actions.ScanningView({
+      //rutaId: id,
+      //routeDirection: direction,
+    // });
+    // Actions.pop({popNum: 2});
+    Actions.scanningView();
+  }
+
+  saveData(value) {
+    AsyncStorage.setItem("text", value);
+    this.setState({text: value})
+    console.log("Saving..." + this.state.text);
   }
 
   render(){
     return (
-      <View>
+      <View style={styles.container}>
         <Text>
           La ruta - {this.props.rutaId} en dir {this.props.routeDirection}
         </Text>
+
         <TextInput
-          style={{height: 50}}
-          placeholder="Escriba la placa del bus de ruta "
-          onChangeText={(text) => this.setState({text})}
-          />
+          style={styles.formInput}
+          placeholder={this.state.text}
+          onChangeText={(text) => this.saveData(text)}
+        />
 
 
         <TouchableOpacity onPress={this.HandleButton.bind(this, this.props.rutaId, this.props.routeDirection)}>
@@ -42,5 +62,24 @@ class RoutePlate extends React.Component {
     );
   }
 }
+
+let styles = StyleSheet.create({
+    container: {
+        padding: 20,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "stretch",
+        backgroundColor: "#F5FCFF",
+    },
+    formInput: {
+        borderWidth: 1,
+        borderColor: "#B22222",
+    },
+    saved: {
+        fontSize: 20,
+        textAlign: "center",
+        margin: 10,
+    }
+});
 
 export default RoutePlate;
