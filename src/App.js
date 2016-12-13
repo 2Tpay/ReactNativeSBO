@@ -3,6 +3,7 @@ import React from 'react';
 import Home from './components/home';
 import RutasView from './components/rutas/rutasView';
 import RutaInformation from './components/rutas/rutaInformation';
+import ScanningView from './components/scanner/scanningView';
 import {
   Router,
   Scene,
@@ -20,6 +21,7 @@ class App extends React.Component {
           <Scene key='home' component={Home} title='Home' />
           <Scene key='rutasView' component={RutasView} title='Rutas' />
           <Scene key='rutaInformation' component={RutaInformation} title='Informacion de Ruta' />
+          <Scene key='scanningView' component={ScanningView} title='Escaner' />
         </Scene>
       </Router>
     );
