@@ -25,12 +25,11 @@ class RoutePlate extends React.Component {
   }
 
   HandleButton(id, direction){
-    //  Actions.ScanningView({
-      //rutaId: id,
-      //routeDirection: direction,
-    // });
+     Actions.scanningView({
+      rutaId: id,
+      routeDirection: direction,
+    });
     // Actions.pop({popNum: 2});
-    Actions.scanningView();
   }
 
   saveData(value) {
