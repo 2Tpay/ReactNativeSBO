@@ -1,9 +1,16 @@
 import React from 'react';
 import Rutas from './rutas';
+import styles from '../../themes/styles';
+import mystyles from './styles';
 import{
 	View,
 	Text,
 } from 'react-native';
+
+import {
+	Container,
+	Content,
+} from 'native-base'
 
 class RutasView extends React.Component {
 	constructor(){
@@ -31,12 +38,14 @@ class RutasView extends React.Component {
 	}
 	render(){
 		return (
-			<View>
-				<Text>
-					Mis rutas
-				</Text>
-				<Rutas rutas={this.state.rutas}/>
-			</View>
+			<Container style={mystyles.container}>
+					<View>
+						<Text style={styles.title}>
+							Mis rutas
+						</Text>
+						<Rutas rutas={this.state.rutas}/>
+					</View>
+			</Container>
 		);
 	}
 }
