@@ -18,10 +18,11 @@ import {
 import { Row, Grid } from "react-native-easy-grid";
 const deviceWidth = Dimensions.get('window').width;
 class RouteDirection extends React.Component {
-  HandleButton(id, direction){
+  HandleButton(id, direction, name){
     Actions.routePlate({
       rutaId: id,
       routeDirection: direction,
+      routeName:name,
     });
   }
   render(){
@@ -30,7 +31,7 @@ class RouteDirection extends React.Component {
         <View style={{alignItems:'center'}}>
           <Grid>
             <Row style={mystyles.rowBuses}>
-              <TouchableOpacity style={{width: deviceWidth}} onPress={this.HandleButton.bind(this, this.props.rutaId, "entrada")}>
+              <TouchableOpacity style={{width: deviceWidth}} onPress={this.HandleButton.bind(this, this.props.rutaId, "entrada",this.props.routeName )}>
                 <Image source={require('../../imgs/bus_entrance.png')} style={mystyles.myBusEntrance}></Image>
                 <Text style={mystyles.text}>
                   Entrada
@@ -38,7 +39,7 @@ class RouteDirection extends React.Component {
               </TouchableOpacity>
             </Row>
             <Row style={mystyles.rowBuses}>
-              <TouchableOpacity style={{width: deviceWidth}} onPress={this.HandleButton.bind(this, this.props.rutaId, "salida")}>
+              <TouchableOpacity style={{width: deviceWidth}} onPress={this.HandleButton.bind(this, this.props.rutaId, "salida", this.props.routeName)}>
                 <Image source={require('../../imgs/bus_exit2.png')} style={mystyles.myBusEntrance}></Image>
                 <Text style={mystyles.text}>
                   Salida

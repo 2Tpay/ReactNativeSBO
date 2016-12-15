@@ -1,20 +1,24 @@
 import React from 'react';
 import {searchUser} from '../api/requester';
-import {debounce} from 'lodash';
 import {
   View,
   Text,
   TextInput,
   StyleSheet,
-  TouchableOpacity,
+  TouchableHighlight,
   AsyncStorage
-} from 'react-native'
-
+} from 'react-native';
+import Hr from 'react-native-hr';
+import {
+  Container,
+  Button
+} from 'native-base';
 import {
 	Actions,
 } from 'react-native-router-flux';
-//import { Container, Hr} from 'native-base
 
+import globalStyles from '../../themes/styles'
+import styles from './styles';
 class ScanningView extends React.Component {
   constructor(){
     super();
@@ -36,12 +40,14 @@ class ScanningView extends React.Component {
         .then(response => {
           if(response.length<=0){
             alert("Carnet numero: "+ carnet+" no se ha encontrado");
+          }else{
+            this.setState({
+              user_details : response,
+              counter: this.state.counter +1,
+              userCarnet: "",
+            });
+            this._textInput.setNativeProps({text: ''});
           }
-          this.setState({
-            user_details : response,
-            counter: response.length <=0? this.state.counter: this.state.counter +1,
-            userCarnet: "",
-          });
         })
         .catch((error) => {
           throw error;
@@ -51,51 +57,41 @@ class ScanningView extends React.Component {
 
   render(){
     return (
-      <View>
-        <Text>Bus en direccion: {this.props.routeDirection} - {this.props.routeId}</Text>
-        <Text>Placa: { this.props.busPlate}</Text>
-        <Text>
-          Num. Pasajeros: {this.state.counter}
-        </Text>
-        <Text>
-          Carnet:
-        </Text>
-        <TextInput onChangeText={(text)=>
-          {
-            this.setState({
-              user_details: this.state.user_details,
-              counter: this.state.counter,
-              userCarnet: text
-            });
-          }
-        }/>
-      <TouchableOpacity onPress={this.searchUserByCarnet.bind(this, this.state.userCarnet)}>
-            <Text>Ingresar</Text>
-          </TouchableOpacity>
-      <View style={style.hr}></View>
-
+      <Container style={styles.container}>
         <View>
-          <Text>Carnet: {this.state.user_details.name}</Text>
-          <Text>Nombre: {this.state.user_details.name}</Text>
-        </View>
-        <TouchableOpacity onPress={this.HandleButton.bind(this)}>
-          <Text>
-            Terminar
+          <Text style={globalStyles.title}>Ingreso de pasajeros</Text>
+          <Text style={styles.text}>Bus de {this.props.routeName} en dirección {this.props.routeDirection}</Text>
+          <Text style={styles.text}>
+            Num. Pasajeros: {this.state.counter}
           </Text>
-        </TouchableOpacity>
-      </View>
+          <Text style={styles.text}>
+            Carnet:
+          </Text>
+          <TextInput returnKeyType="search" ref={component => this._textInput = component} style={styles.formInput} placeholder="Ingrese número de carnet" onChangeText={(text)=>
+            {
+              this.setState({
+                user_details: this.state.user_details,
+                counter: this.state.counter,
+                userCarnet: text
+              });
+            }
+          }/>
+        <Button style={styles.btn} onPress={this.searchUserByCarnet.bind(this, this.state.userCarnet)}>
+          Ingresar
+        </Button>
+        <Hr lineColor='#b3b3b3' text='Información de usuario' />
+
+          <View style={styles.informationUser}>
+            <Text style={styles.informationUserText}>Carnet: {this.state.user_details.name}</Text>
+            <Text style={styles.informationUserText}>Nombre: {this.state.user_details.name}</Text>
+          </View>
+          <TouchableHighlight style={styles.touchable} onPress={this.HandleButton.bind(this)}>
+            <Text style={styles.touchableText}>Terminar</Text>
+          </TouchableHighlight>
+        </View>
+      </Container>
     );
   }
 }
 
-let style = StyleSheet.create({
-  hr: {
-    alignItems:'center',
-    width: 300,
-    marginTop: 10,
-    marginBottom: 10,
-    padding: 1,
-    backgroundColor: '#b3b3b3'
-  },
-});
 export default ScanningView;

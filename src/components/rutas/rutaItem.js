@@ -15,16 +15,17 @@ import {
 } from "react-native-easy-grid";
 
 class RutaItem extends React.Component {
-  HandleButton(id){
+  HandleButton(id, name){
     Actions.routeDirection({
       rutaId: id,
+      routeName: name,
     });
   }
   render(){
     return (
       <Grid style={styles.mt}>
         <Row key ={this.props.ruta.id}>
-          <TouchableOpacity style={styles.row} onPress={this.HandleButton.bind(this, this.props.ruta.id)}>
+          <TouchableOpacity style={styles.row} onPress={this.HandleButton.bind(this, this.props.ruta.id,this.props.ruta.nombre)}>
             <Text style={styles.text}>
               {this.props.ruta.nombre}
             </Text>
