@@ -1,5 +1,7 @@
 import React from 'react';
 import styles from '../themes/styles';
+import {getRoutes, getCardsInformation} from './api/requester';
+import {write} from './FileSystem/fileSystem';
 import{
 	View,
 	Text,
@@ -19,9 +21,40 @@ import {
 	Actions,
 } from 'react-native-router-flux';
 
+
 const deviceHeight = Dimensions.get('window').height;
 //const background = require('../imgs/shadow.png');
+// write the file
 class Home extends React.Component {
+	getRoutes
+	constructor(){
+		super();
+		this.state ={
+			rutas :[]
+		}
+	}
+
+	handleSyncButton(){
+		let routes =[];
+		getRoutes().then(res => {
+			routes = res;
+			for(let i=0; i< routes.length; i++){
+				delete routes[i].descripcion;
+			}
+			write('routes.txt',JSON.stringify(routes));
+		})
+		.catch(error => {alert(`ERROR AL SYNC RUTAS\n${error}`)});
+
+		let passengers = [];
+		getCardsInformation().then(res => {
+			passengers= res;
+			//console.log("aquiii");
+			//console.log(passengers.getWithClient);
+			write('cardsInformation.txt',JSON.stringify(passengers.getWithClient));
+		})
+		.catch(error => {alert(`ERROR AL SYNC TARJETAS \n${error}`)});
+
+	}
 	render(){
 		return (
 			<Container>
@@ -38,7 +71,7 @@ class Home extends React.Component {
 								>
 									Cargar Rutas
 							</Button>
-							<Button style={styles.btn}>
+							<Button style={styles.btn} onPress = {this.handleSyncButton.bind(this)}>
 								Sync
 							</Button>
 						</View>

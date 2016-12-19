@@ -24,8 +24,8 @@ class RutaItem extends React.Component {
   render(){
     return (
       <Grid style={styles.mt}>
-        <Row key ={this.props.ruta.id}>
-          <TouchableOpacity style={styles.row} onPress={this.HandleButton.bind(this, this.props.ruta.id,this.props.ruta.nombre)}>
+        <Row key ={this.props.ruta.idRuta}>
+          <TouchableOpacity style={styles.row} onPress={this.HandleButton.bind(this, this.props.ruta.idRuta,this.props.ruta.nombre)}>
             <Text style={styles.text}>
               {this.props.ruta.nombre}
             </Text>

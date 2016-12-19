@@ -16,7 +16,7 @@ class Rutas extends React.Component {
     if(this.props.rutas){
       rutaItems = this.props.rutas.map(ruta =>{
         return (
-          <RutaItem key={ruta.id} ruta={ruta} />
+          <RutaItem key={ruta.idRuta} ruta={ruta} />
         );
       });
     }
