@@ -67,13 +67,14 @@ class RoutePlate extends React.Component {
         .then(response => {
           if(response ===true){
               write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
-              alert('creado');
-
+              //alert('creado');
+              Actions.pop({popNum: 3});
           }
         });
       }else{
           write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
-          alert('creado');
+          //alert('creado');
+          Actions.pop({popNum: 3});
       }
     })
     .catch(error => {console.log(error);});
