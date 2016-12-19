@@ -40,11 +40,13 @@ class RoutePlate extends React.Component {
       busPlate: this.state.busPlate,
       routeName: this.props.routeName
     });*/
-    let jsonTransaction = [{
+    let jsonTransaction = {
       routeId: this.props.rutaId,
       routeDirection: this.props.routeDirection,
       busPlate: this.state.busPlate,
       routeName: this.props.routeName,
+      date: new Date().getTime(),
+      state: 'available',
       passengers:[
         {
           idTarjeta: 2
@@ -56,7 +58,7 @@ class RoutePlate extends React.Component {
           idTarjeta: 8
         }
     ]
-    }];
+    };
     exist('trips')
     .then(response =>{
       console.log(`exist: ${response}`);
@@ -64,15 +66,19 @@ class RoutePlate extends React.Component {
         mkdir('trips')
         .then(response => {
           if(response ===true){
-              write('trips/test.txt', JSON.stringify(jsonTransaction));
+              write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+              alert('creado');
+
           }
         });
       }else{
-          write('trips/test.txt', JSON.stringify(jsonTransaction));
+          write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+          alert('creado');
       }
     })
     .catch(error => {console.log(error);});
     //
+
   }
 
   saveData(value) {

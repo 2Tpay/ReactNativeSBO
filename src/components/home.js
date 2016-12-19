@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../themes/styles';
-import {getRoutes, getCardsInformation} from './api/requester';
-import {write} from './FileSystem/fileSystem';
+import {getRoutes, getCardsInformation, postTransaction} from './api/requester';
+import {write, readDir, unlink, exist, mkdir, read} from './FileSystem/fileSystem';
 import{
 	View,
 	Text,
@@ -25,6 +25,7 @@ import {
 const deviceHeight = Dimensions.get('window').height;
 //const background = require('../imgs/shadow.png');
 // write the file
+var RNFS = require('react-native-fs')
 class Home extends React.Component {
 	getRoutes
 	constructor(){
@@ -35,6 +36,7 @@ class Home extends React.Component {
 	}
 
 	handleSyncButton(){
+		/*------------GETING--------------*/
 		let routes =[];
 		getRoutes().then(res => {
 			routes = res;
@@ -54,6 +56,35 @@ class Home extends React.Component {
 		})
 		.catch(error => {alert(`ERROR AL SYNC TARJETAS \n${error}`)});
 
+		/*-----------POSTING------------*/
+
+		exist('trips')
+		.then((res) =>{
+			if(res===true){
+				readDir('trips')
+				.then(files =>{
+					files.forEach((file) =>{
+						//unlink(file.name);
+						console.log(file.name);
+						read('trips/'+file.name)
+						.then((trip)=>{
+							if(trip.state==='done'){
+								postTransaction(trip.routeId, trip.date,trip.busPlate, trip.routeDirection,trip.passengers)
+								.then((response) => {unlink('trips/'+file.name);})
+							}
+
+						});
+					});
+					//unlink('trips');
+				})
+				.catch(error => {console.log(error);});
+			}
+			alert("	SYNCRONIZACION EXITOSA");
+		});
+		//console.log(RNFS.ExternalStorageDirectoryPath);
+		//console.log(RNFS.ExternalDirectoryPath);
+
+		//unlink('trips');
 	}
 	render(){
 		return (

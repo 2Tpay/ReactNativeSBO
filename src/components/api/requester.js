@@ -1,3 +1,6 @@
+import Ajax from 'ajax-promise-es6';
+
+var my_path = 'http://5eeba7fb.ngrok.io/';
 export function searchUser(user){
   return fetch(`https://api.github.com/users/${user}`)
 .then((response) => response.json())
@@ -9,7 +12,7 @@ export function searchUser(user){
 }
 
 export function getRoutes(){
-  return fetch(`http://97be178d.ngrok.io/api/Rutas`, {
+  return fetch(`${my_path}api/Rutas`, {
   method: 'GET',
   headers: {
     'Accept': 'application/json',
@@ -21,7 +24,7 @@ export function getRoutes(){
 }
 
 export function getCardsInformation(){
-  return fetch('http://97be178d.ngrok.io/api/Tarjetas/getWithClient', {
+  return fetch(`${my_path}api/Tarjetas/getWithClient`, {
     method:'GET',
     headers: {
       'Accept': 'application/json',
@@ -32,27 +35,40 @@ export function getCardsInformation(){
   .catch((error) => {console.log(error);});
 }
 
-export function postTransaction(routeId, routePlate, routeDirection, passengers){
-  let params = new FormData();
-  params.append('idRuta', routeId);
-  params.append('fecha', new Date());
-  params.append('busPlaca', routePlate);
-  params.append('tipoMovimiento', routeDirection);
-  let array = [];
-  passengers.forEach((passenger) =>{
-    array.push(passenger.idTarjeta);
-  });
-  params.append('transacciones',array);
-
-  return fetch(`http://97be178d.ngrok.io/api/Rutas`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
-  body: params
-})
-.then((response) => {return response.json()})
-.catch((error) => {console.log(error);});
+export function postTransaction(routeId, date,routePlate, routeDirection, passengers){
+    let array = [];
+    passengers.forEach((passenger) =>{
+      array.push(passenger.idTarjeta);
+    });
+    let params = {
+      idRuta: routeId,
+      fecha: new Date(date).toISOString(),
+      busPlaca: routePlate,
+      tipoMovimiento: routeDirection,
+      busConductor: 'nada',
+      transacciones: array
+    }
+    //console.log("aqui=>", params);
+    //console.log(JSON.stringify(params));
+  /*Ajax.post('http://5eeba7fb.ngrok.io/api/Viajes/postVariousTransactions',params,{
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  }).then(res => {
+    console.log(`res: ${res}`);
+    //return res.json();
+  })
+  .catch(error => {console.log('errodfgr: ',error);});
+*/
+  return fetch(`${my_path}api/Viajes/postVariousTransactions`, {
+    method:'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body:  JSON.stringify(params)
+  })
+  .then((response) => {console.log("intento");return response.json()})
+  .catch((error) => {console.log(`error: ${error}`);});
 }
 
 

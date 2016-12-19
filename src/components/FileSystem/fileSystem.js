@@ -21,6 +21,12 @@ export function exist(name){
   .catch(error => {alert('ERRRO AL VERIFICAR PATH')});
 }
 
+export function unlink(name){
+  RNFS.unlink(my_path+'/'+name)
+  .then(response => {console.log('BORRADO');})
+  .catch(error => {alert('ERRRO AL BORRAR PATH')});
+}
+
 export function mkdir(name){
   return RNFS.mkdir(my_path+'/'+name)
   .then(success => {console.log('Creado exitosamente'); return true;})
@@ -35,4 +41,10 @@ export function read(name){
   .catch((err) => {
     console.log(err.message);
   });
+}
+
+export function readDir(name){
+  return RNFS.readDir(my_path+'/'+name)
+  .then(response => {return response;})
+  .catch(error => {alert('ERROR AL LEER CARPETA TRIPS')});
 }
