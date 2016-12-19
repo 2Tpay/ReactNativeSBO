@@ -13,6 +13,7 @@ import {
   Actions
 } from 'react-native-router-flux';
 import globalStyles from '../../themes/styles';
+import {write, exist, mkdir} from '../FileSystem/fileSystem';
 import {
   Container,
   Button
@@ -33,13 +34,45 @@ class RoutePlate extends React.Component {
   }
 
   HandleButton(){
-     Actions.scanningView({
+     /*Actions.scanningView({
       routeId: this.props.rutaId,
       routeDirection: this.props.routeDirection,
       busPlate: this.state.busPlate,
       routeName: this.props.routeName
-    });
-    // Actions.pop({popNum: 2});
+    });*/
+    let jsonTransaction = [{
+      routeId: this.props.rutaId,
+      routeDirection: this.props.routeDirection,
+      busPlate: this.state.busPlate,
+      routeName: this.props.routeName,
+      passengers:[
+        {
+          idTarjeta: 2
+        },
+        {
+          idTarjeta: 5
+        },
+        {
+          idTarjeta: 8
+        }
+    ]
+    }];
+    exist('trips')
+    .then(response =>{
+      console.log(`exist: ${response}`);
+      if(response ===false){
+        mkdir('trips')
+        .then(response => {
+          if(response ===true){
+              write('trips/test.txt', JSON.stringify(jsonTransaction));
+          }
+        });
+      }else{
+          write('trips/test.txt', JSON.stringify(jsonTransaction));
+      }
+    })
+    .catch(error => {console.log(error);});
+    //
   }
 
   saveData(value) {
