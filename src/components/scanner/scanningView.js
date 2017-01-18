@@ -31,9 +31,46 @@ class ScanningView extends React.Component {
       this.setState({text: value});
     }).done();
   }
-  HandleButton(){
-    Actions.pop({popNum: 4});
+  componentDidMount(){
+    this._mounted = true;
+    this.startNFCloop();
   }
+  componentWillMount(){
+    this._mounted = false;
+  }
+
+  isMounted(){
+    return this._mounted;
+  }
+
+  startNFCloop(){
+      var self = this;
+      setTimeout(function() {
+      if (!self.isMounted()) { return; } // abandon
+          //self.callback(); // do it once and then start it up ...
+      self._timer = setInterval(self.nfcCallback.bind(self), 1000);
+      }, 1000);
+  }
+
+  nfcCallback(){
+     /*getCardId().then((card) => {
+      }).catch((err) => {
+          // NFCcode isset, do something
+          if (err.message > "") {
+              this.login(err.message);
+          }
+      });*/
+  }
+
+
+  HandleButton(){
+    //Actions.pop({popNum: 4});
+  }
+
+  testingNFC(carnet){
+    alert("ingresar "+carnet);
+  }
+
   searchUserByCarnet(carnet){
       if(carnet != ''){
        searchUser(carnet)
@@ -76,7 +113,7 @@ class ScanningView extends React.Component {
               });
             }
           }/>
-        <Button style={styles.btn} onPress={this.searchUserByCarnet.bind(this, this.state.userCarnet)}>
+        <Button style={styles.btn} onPress={this.testingNFC.bind(this, this.state.userCarnet)}>
           Ingresar
         </Button>
         <Hr lineColor='#b3b3b3' text='Información de usuario' />
