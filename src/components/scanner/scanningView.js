@@ -17,6 +17,8 @@ import {
 	Actions,
 } from 'react-native-router-flux';
 
+import { getCardId } from 'nfc-react-native';
+
 import globalStyles from '../../themes/styles'
 import styles from './styles';
 class ScanningView extends React.Component {
@@ -53,13 +55,13 @@ class ScanningView extends React.Component {
   }
 
   nfcCallback(){
-     /*getCardId().then((card) => {
+     getCardId().then((card) => {
       }).catch((err) => {
           // NFCcode isset, do something
           if (err.message > "") {
               this.login(err.message);
           }
-      });*/
+      });
   }
 
 
