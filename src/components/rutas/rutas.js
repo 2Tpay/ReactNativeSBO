@@ -5,6 +5,10 @@ import {
   Text,
   View
 }from 'react-native';
+import
+{
+  Content
+} from 'native-base';
 
 class Rutas extends React.Component {
   render(){
@@ -12,14 +16,16 @@ class Rutas extends React.Component {
     if(this.props.rutas){
       rutaItems = this.props.rutas.map(ruta =>{
         return (
-          <RutaItem key={ruta.id} ruta={ruta} />
+          <RutaItem key={ruta.idRuta} ruta={ruta} />
         );
       });
     }
     return (
-      <View>
-        {rutaItems}
-      </View>
+      <Content>
+        <View style ={{paddingTop: 10, alignItems: 'center'}}>
+          {rutaItems}
+        </View>
+      </Content>
     );
   }
 }
