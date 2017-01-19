@@ -57,10 +57,9 @@ class ScanningView extends React.Component {
   nfcCallback(){
      getCardId().then((card) => {
        alert("Ingresado: " + card);
-       console.log("El NFC: " + card);
       }).catch((err) => {
           // NFCcode isset, do something
-          if (err.message > "") {
+          if (err.message > "" && err.message != "Operacion Cancelada") {
               alert(err.message);
           }
       });
