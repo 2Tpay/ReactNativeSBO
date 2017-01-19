@@ -61,7 +61,7 @@ class ScanningView extends React.Component {
       }).catch((err) => {
           // NFCcode isset, do something
           if (err.message > "") {
-              this.login(err.message);
+              alert(err.message);
           }
       });
   }
