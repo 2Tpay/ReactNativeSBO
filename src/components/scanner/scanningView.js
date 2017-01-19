@@ -37,7 +37,7 @@ class ScanningView extends React.Component {
     this._mounted = true;
     this.startNFCloop();
   }
-  componentWillMount(){
+  componentWillUnmount(){
     this._mounted = false;
   }
 
@@ -56,6 +56,8 @@ class ScanningView extends React.Component {
 
   nfcCallback(){
      getCardId().then((card) => {
+       alert("Ingresado: " + card);
+       console.log("El NFC: " + card);
       }).catch((err) => {
           // NFCcode isset, do something
           if (err.message > "") {
