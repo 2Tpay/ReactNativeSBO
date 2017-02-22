@@ -2,11 +2,13 @@ import React from 'react';
 import {searchUser} from '../api/requester';
 import {
   View,
+  Alert,
   Text,
   TextInput,
   StyleSheet,
   TouchableHighlight,
-  AsyncStorage
+  AsyncStorage,
+  DeviceEventEmitter
 } from 'react-native';
 import Hr from 'react-native-hr';
 import {
@@ -17,7 +19,7 @@ import {
 	Actions,
 } from 'react-native-router-flux';
 
-import { getCardId } from 'nfc-react-native';
+import { getTagId } from 'nfc-react-native';
 
 import globalStyles from '../../themes/styles'
 import styles from './styles';
@@ -33,10 +35,24 @@ class ScanningView extends React.Component {
       this.setState({text: value});
     }).done();
   }
-  componentDidMount(){
-    this._mounted = true;
-    this.startNFCloop();
-  }
+
+  componentDidMount() {
+
+      this._mounted = true;
+      // this.startNFCloop();
+
+      DeviceEventEmitter.addListener('onTagError', function (e) {
+          console.log('error', e)
+          // alert(JSON.stringify(e))
+      });
+
+      DeviceEventEmitter.addListener('onTagDetected', function (e) {
+          let stringifiedId = JSON.stringify(e);
+          Alert.alert("Isaula: " + stringifiedId);
+          // this.state.user_details.name = stringifiedId;
+      });
+    }
+
   componentWillUnmount(){
     this._mounted = false;
   }
@@ -45,8 +61,12 @@ class ScanningView extends React.Component {
     return this._mounted;
   }
 
+  readTagId(){
+    getTagId();
+  }
+
   startNFCloop(){
-      var self = this;
+      let self = this;
       setTimeout(function() {
       if (!self.isMounted()) { return; } // abandon
           //self.callback(); // do it once and then start it up ...
@@ -55,7 +75,8 @@ class ScanningView extends React.Component {
   }
 
   nfcCallback(){
-     getCardId().then((card) => {
+    let self = this;
+    self.getCardId().then((card) => {
        alert("Ingresado: " + card);
       }).catch((err) => {
           // NFCcode isset, do something
@@ -94,6 +115,7 @@ class ScanningView extends React.Component {
         });
       }
   }
+// <Button style={styles.btn} onPress={this.testingNFC.bind(this, this.state.userCarnet)}>
 
   render(){
     return (
@@ -116,7 +138,7 @@ class ScanningView extends React.Component {
               });
             }
           }/>
-        <Button style={styles.btn} onPress={this.testingNFC.bind(this, this.state.userCarnet)}>
+        <Button style={styles.btn} onPress={this.readTagId}>
           Ingresar
         </Button>
         <Hr lineColor='#b3b3b3' text='Información de usuario' />
