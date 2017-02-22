@@ -68,7 +68,8 @@ class Home extends React.Component {
 						console.log(file.name);
 						read('trips/'+file.name)
 						.then((trip)=>{
-							if(trip.state==='done'){
+							if(trip.state==='available'){
+								
 								postTransaction(trip.routeId, trip.date,trip.busPlate, trip.routeDirection,trip.passengers)
 								.then((response) => {unlink('trips/'+file.name);})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
