@@ -40,7 +40,7 @@ class RoutePlate extends React.Component {
       busPlate: this.state.busPlate,
       routeName: this.props.routeName
     });*/
-    let jsonTransaction = {
+    /*let jsonTransaction = {
       routeId: this.props.rutaId,
       routeDirection: this.props.routeDirection,
       busPlate: this.state.busPlate,
@@ -78,7 +78,13 @@ class RoutePlate extends React.Component {
       }
     })
     .catch(error => {console.log(error);});
-    //
+    //*/
+    Actions.scanningView({
+      routeId: this.props.rutaId,
+      routeDirection: this.props.routeDirection,
+      busPlate: this.state.busPlate,
+      routeName: this.props.routeName
+    })
 
   }
 

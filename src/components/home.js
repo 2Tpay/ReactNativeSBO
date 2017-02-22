@@ -71,6 +71,7 @@ class Home extends React.Component {
 							if(trip.state==='done'){
 								postTransaction(trip.routeId, trip.date,trip.busPlate, trip.routeDirection,trip.passengers)
 								.then((response) => {unlink('trips/'+file.name);})
+								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
 							}
 
 						});
