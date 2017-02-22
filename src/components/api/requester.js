@@ -1,6 +1,7 @@
 import Ajax from 'ajax-promise-es6';
 
-var my_path = 'http://5eeba7fb.ngrok.io/';
+var my_path = 'http://bce1481b.ngrok.io/';
+
 export function searchUser(user){
   return fetch(`https://api.github.com/users/${user}`)
 .then((response) => response.json())
