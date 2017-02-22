@@ -30,7 +30,7 @@ class RutasView extends React.Component {
 		.then((success)=>{
 			this.setState({rutas: success});
 			//console.log(success);
-		}).catch(error =>{console.log(error.message)});
+		}).catch(error =>{alert(`Error al cargar rutas \n${error.message}`)});
 	}
 
 	render(){

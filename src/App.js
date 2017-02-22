@@ -26,6 +26,7 @@ class App extends React.Component {
           <Scene key='routeDirection' component={RouteDirection} title='Detalles de Ruta' />
           <Scene key='routePlate' component={RoutePlate} title='Ingreso de placa' />
           <Scene key='scanningView' component={ScanningView} title='Escáner' />
+          {/* <Scene key='scanningView' component={ScanningView} title='Escáner' /> */}
         </Scene>
       </Router>
     );
