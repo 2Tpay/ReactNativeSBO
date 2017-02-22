@@ -1,0 +1,3 @@
+[submodule "nfc-react-native"]
+	path = nfc-react-native
+	url = https://github.com/ebenezer-unitec/nfc-react-native.git
