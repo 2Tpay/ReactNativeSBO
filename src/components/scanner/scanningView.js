@@ -8,7 +8,8 @@ import {
   StyleSheet,
   TouchableHighlight,
   AsyncStorage,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  ListView
 } from 'react-native';
 import Hr from 'react-native-hr';
 
@@ -35,7 +36,8 @@ class ScanningView extends React.Component {
     super();
     this.state = {
       user_details : [],
-      counter : 0
+      counter : 0,
+      listViewData: Array(20).fill('').map((_,i)=>`item #${i}`)
     };
 
     AsyncStorage.getItem("text").then((value) => {
@@ -45,6 +47,12 @@ class ScanningView extends React.Component {
 
 
   }
+  deleteRow(secId, rowId, rowMap) {
+		rowMap[`${secId}${rowId}`].closeRow();
+		const newData = [...this.state.listViewData];
+		newData.splice(rowId, 1);
+		this.setState({listViewData: newData});
+}
 
 
   playSoundBundle () {
@@ -104,6 +112,7 @@ class ScanningView extends React.Component {
   }
 
   render(){
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return (
       <Container style={styles.container}>
         <View>
