@@ -21,11 +21,11 @@ class App extends React.Component {
     return (
       <Router>
         <Scene key='root' theme={theme} barButtonIconStyle={styles.navBarButton} titleStyle={styles.navBarTitle} navigationBarStyle={styles.navBar} style = {styles.scene}>
-          <Scene key='scanningView' component={ScanningView} title='Escáner' />
           <Scene key='home' component={Home} title='Home' />
           <Scene key='rutasView' component={RutasView} title='Rutas' />
           <Scene key='routeDirection' component={RouteDirection} title='Detalles de Ruta' />
           <Scene key='routePlate' component={RoutePlate} title='Ingreso de placa' />
+          <Scene key='scanningView' component={ScanningView} title='Escáner' />
           {/* <Scene key='scanningView' component={ScanningView} title='Escáner' /> */}
         </Scene>
       </Router>

@@ -11,6 +11,7 @@ import {
   DeviceEventEmitter
 } from 'react-native';
 import Hr from 'react-native-hr';
+
 import {
   Container,
   Button
@@ -28,6 +29,7 @@ const Sound = require('react-native-sound');
 
 import globalStyles from '../../themes/styles'
 import styles from './styles';
+import { SwipeListView } from 'react-native-swipe-list-view';
 class ScanningView extends React.Component {
   constructor(){
     super();
@@ -43,6 +45,7 @@ class ScanningView extends React.Component {
 
 
   }
+
 
   playSoundBundle () {
     const s = new Sound('button_beep_tone.mp3', Sound.MAIN_BUNDLE, (e) => {
@@ -127,8 +130,6 @@ class ScanningView extends React.Component {
         <Hr lineColor='#b3b3b3' text='Pasajeros' />
 
           <View style={styles.informationUser}>
-            <Text style={styles.informationUserText}>Carnet: {this.state.user_details.name}</Text>
-            <Text style={styles.informationUserText}>Nombre: {this.state.user_details.name}</Text>
           </View>
           <TouchableHighlight style={styles.touchable} onPress={this.playSoundBundle}>
             <Text style={styles.touchableText}>Terminar</Text>
