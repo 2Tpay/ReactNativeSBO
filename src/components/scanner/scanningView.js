@@ -61,7 +61,6 @@ class ScanningView extends React.Component {
     });
   }
 
-
   playClientDetectedSound () {
     const s = new Sound('button_beep_tone.mp3', Sound.MAIN_BUNDLE, (e) => {
       if (e) {
@@ -89,14 +88,14 @@ class ScanningView extends React.Component {
   }
 
   componentDidMount() {
-  		// read('cardsInformation.txt')
-  		// .then((success)=>{
-  		// 	this.setState({
-      //     counter: this.state.counter,
-      //     clientes: success,
-      //     listViewData: this.listViewData
-      //   });
-  		// }).catch(error =>{alert(`Error al cargar info de clientes \n${error.message}`)});
+  		read('cardsInformation.txt')
+  		.then((success)=>{
+  			this.setState({
+          counter: this.state.counter,
+          clientes: success,
+          listViewData: this.state.listViewData
+        });
+  		}).catch(error =>{alert(`Error al cargar info de clientes \n${error.message}`)});
 
       //NFC events
       DeviceEventEmitter.addListener('onTagError', function (e) {
@@ -105,14 +104,12 @@ class ScanningView extends React.Component {
 
       DeviceEventEmitter.addListener('onTagDetected', (e) => {
           let cardId = e.id;
-          // let cardId = JSON.stringify(e);
-          // let cardId = stringifiedCard.id;
           if(this.searchClientByCardId(cardId)){
             this.playClientDetectedSound();
           } else {
             this.playClientAlreadyExistsSound();
           }
-          this.state.clientes.unshift(cardId);
+          this.addPassenger(cardId);
           Alert.alert("Isaula: " + cardId);
       });
   }
@@ -121,7 +118,9 @@ class ScanningView extends React.Component {
     let clientFound = false;
     if(this.state.clientes.length > 0)
     {
-      clientFound = this.state.clientes.includes(cardId);
+      let clientFoundArray = this.state.clientes.filter( client => client.id_tarjeta == cardId);
+
+      clientFound = clientFoundArray.length > 0;
     }
 
     return clientFound;
@@ -132,6 +131,7 @@ class ScanningView extends React.Component {
     newData.unshift(passenger)
     this.setState({
       counter: this.state.counter+1,
+      clientes: this.state.clientes,
       listViewData: newData
     });
   }

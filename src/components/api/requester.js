@@ -1,7 +1,7 @@
 import Ajax from 'ajax-promise-es6';
 
-var my_path = 'http://f417af59.ngrok.io/';
-var ACCESS_TOKEN = '9jRFfsTjG3v0ySBYBF36GmsGQEIhwPqLhzYcA6fBlwyP1nBMfanOCKCuCqBqyq2d'
+var my_path = 'http://558edd43.ngrok.io/';
+var ACCESS_TOKEN = 'HArIbRUMAP958op0XGLkud6WPtlGaOhN3T3UaaGcx3gsCPElwVqMOoKZQqKg8TEe'
 export function searchUser(user){
   /*return fetch(`https://api.github.com/users/${user}`)
 .then((response) => response.json())
