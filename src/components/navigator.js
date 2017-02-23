@@ -54,18 +54,6 @@ export default class Routing extends Component {
         ref={(nav) => {this.navigator =nav}}
         initialRoute = {{name: 'login'}}
         renderScene = {this.renderScene.bind(this)}
-          navigationBar={this.state.title !=='Login'&&
-            <Navigator.NavigationBar
-            routeMapper={{
-              LeftButton: (route, navigator, index, navState) => {
-               return (<Text>Cancel</Text>); },
-             RightButton: (route, navigator, index, navState) => {
-               return (<Text>Done</Text>); },
-             Title: (route, navigator, index, navState) => {
-               return (<Text>{this.state.title}</Text>); }, }}
-             style={{backgroundColor: 'blue'}} /> }
-
-
       />
     );
   }

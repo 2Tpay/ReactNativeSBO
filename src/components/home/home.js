@@ -100,6 +100,12 @@ class Home extends React.Component {
 	render(){
 		return (
 			<Container>
+				<Header style={styles.navBar}>
+					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
+						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
+					</Button>
+					<Title style={styles.navBarTitle}>{'Home'}</Title>
+				</Header>
 				<View style={styles.container}>
 					<Content>
 						<Image source={require('../../imgs/logo-4.png')} style={styles.shadow}></Image>

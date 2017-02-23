@@ -16,7 +16,9 @@ import Hr from 'react-native-hr';
 
 import {
   Container,
-  Button
+  Button,
+  Header,
+  Title
 } from 'native-base';
 import {
 	Actions,
@@ -121,40 +123,46 @@ class ScanningView extends React.Component {
   render(){
     return (
         <View style={styles.container}>
-          <Text style={globalStyles.title}>Ingreso de pasajeros</Text>
-          <Text style={styles.text}>Bus de {this.props.routeName} en dirección {this.props.routeDirection} {this.props.routeDirection=="entrada"?'al':'del'} templo</Text>
-          <Text style={styles.text}>
-            Num. Pasajeros: {this.state.counter}
-          </Text>
-        <Hr lineColor='#b3b3b3' text='Pasajeros' />
+          <Header style={globalStyles.navBar}>
+  					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
+  						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
+  					</Button>
+  					<Title style={globalStyles.navBarTitle}>{'Escaner'}</Title>
+  				</Header>
+            <Text style={globalStyles.title}>Ingreso de pasajeros</Text>
+            <Text style={styles.text}>Bus de {this.props.routeName} en dirección {this.props.routeDirection} {this.props.routeDirection=="entrada"?'al':'del'} templo</Text>
+            <Text style={styles.text}>
+              Num. Pasajeros: {this.state.counter}
+            </Text>
+          <Hr lineColor='#b3b3b3' text='Pasajeros' />
 
-          <View style={styles.informationUser}>
-    					<SwipeListView
-                swipeRowStyle={{flex: 1}}
-                enableEmptySections={true}
-    						dataSource={this.ds.cloneWithRows(this.state.listViewData)}
-    						renderRow={ data => (
-    							<TouchableHighlight
-    								style={styles.rowFront}
-    							>
-    								<View>
-    									<Text>{data}</Text>
-    								</View>
-    							</TouchableHighlight>
-    						)}
-    						renderHiddenRow={ (data, secId, rowId, rowMap) => (
-    							<View style={styles.rowBack}>
-    								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => this.deleteRow(secId, rowId, rowMap) }>
-    									<Text style={styles.backTextWhite}>Delete</Text>
-    								</TouchableOpacity>
-    							</View>
-    						)}
-    						rightOpenValue={-75}
-    					/>
-          </View>
-          <TouchableHighlight style={styles.touchable} onPress={this.handleFinishButton.bind(this)}>
-            <Text style={styles.touchableText}>Terminar</Text>
-          </TouchableHighlight>
+            <View style={styles.informationUser}>
+      					<SwipeListView
+                  swipeRowStyle={{flex: 1}}
+                  enableEmptySections={true}
+      						dataSource={this.ds.cloneWithRows(this.state.listViewData)}
+      						renderRow={ data => (
+      							<TouchableHighlight
+      								style={styles.rowFront}
+      							>
+      								<View>
+      									<Text>{data}</Text>
+      								</View>
+      							</TouchableHighlight>
+      						)}
+      						renderHiddenRow={ (data, secId, rowId, rowMap) => (
+      							<View style={styles.rowBack}>
+      								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => this.deleteRow(secId, rowId, rowMap) }>
+      									<Text style={styles.backTextWhite}>Delete</Text>
+      								</TouchableOpacity>
+      							</View>
+      						)}
+      						rightOpenValue={-75}
+      					/>
+            </View>
+            <TouchableHighlight style={styles.touchable} onPress={this.handleFinishButton.bind(this)}>
+              <Text style={styles.touchableText}>Terminar</Text>
+            </TouchableHighlight>
         </View>
     );
   }
