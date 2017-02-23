@@ -8,9 +8,7 @@ import{
 	StyleSheet,
 	TouchableOpacity,
 	Dimensions,
-	Image,
-	ActivityIndicator,
-	NetInfo
+	Image
 } from 'react-native';
 
 import {
@@ -26,41 +24,20 @@ import {
 	Actions,
 } from 'react-native-router-flux';
 
+
 const deviceHeight = Dimensions.get('window').height;
 //const background = require('../imgs/shadow.png');
 // write the file
-let RNFS = require('react-native-fs')
-
+var RNFS = require('react-native-fs')
 class Home extends React.Component {
-
+	getRoutes
 	constructor(){
 		super();
 		this.state ={
-			rutas :[],
-			isLoading: false,
-			isConnected: false
+			rutas :[]
 		}
 
-		this.navigate = this.navigate.bind(this);
-	}
-
-	setIsConnected(isConnected){
-		this.state.isConnected = isConnected;
-		if(!isConnected){
-			alert("Se ha perdido la conexión del internet.");
-		}
-	}
-
-	componentDidMount() {
-	  const dispatchConnected = isConnected => (this.setIsConnected(isConnected));
-
-	  NetInfo.isConnected.fetch().then(
-			isConnected => {
-			this.state.isConnected = isConnected;
-			}
-		 ).done(() => {
-	    NetInfo.isConnected.addEventListener('change', dispatchConnected);
-	  });
+		this.navigate = this.navigate.bind(this)
 	}
 
 	navigate(name){
@@ -68,13 +45,8 @@ class Home extends React.Component {
 	}
 
 	handleSyncButton(){
-		if(!this.state.isConnected){
-			alert("No se está conectado al internet; por lo tanto, no puede sincronizar los datos.");
-			return;
-		}
-
 		/*------------GETING--------------*/
-		this.state.isLoading = true;
+
 		let routes =[];
 		getRoutes().then(res => {
 			routes = res;
@@ -93,9 +65,49 @@ class Home extends React.Component {
 			write('cardsInformation.txt',JSON.stringify(passengers.getWithClient));
 		})
 		.catch(error => {alert(`ERROR AL SYNC TARJETAS \n${error}`)});
+		
 
 		/*-----------POSTING------------*/
 
+		/*let jsonTransaction = {
+      routeId: 1,
+      routeDirection: 'Entrada',
+      busPlate: 'NADA',
+      routeName: 'No nos importa',
+      date: new Date().getTime(),
+      state: 'available',
+      passengers:[
+        {
+          idTarjeta: "62b2fdfc"
+        },
+        {
+          idTarjeta: "62b2fdfc"
+        },
+        {
+          idTarjeta: "62b2fdfc"
+        }
+    ]
+    };
+    exist('trips')
+    .then(response =>{
+      console.log(`exist: ${response}`);
+      if(response ===false){
+        mkdir('trips')
+        .then(response => {
+          if(response ===true){
+              write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+              //alert('creado');
+              //Actions.pop({popNum: 3});
+          }
+        });
+      }else{
+          write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+          //alert('creado');
+          //Actions.pop({popNum: 3});
+      }
+    })
+    .catch(error => {console.log(error);});
+*/
 		exist('trips')
 		.then((res) =>{
 			if(res===true){
@@ -125,23 +137,18 @@ class Home extends React.Component {
 		//console.log(RNFS.ExternalDirectoryPath);
 
 		//unlink('trips');
-
-		this.state.isLoading = false;
 	}
-
+	handleLogout(){
+		console.log("LOGEO");
+	}
 	render(){
-		let spinner = this.state.isLoading ?
-    ( <ActivityIndicator
-        size='large'/> ) :
-    ( <View/>);
-
 		return (
 			<Container>
 				<Header style={styles.navBar}>
-					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
+					<Button transparent onPress={this.handleLogout.bind(this)}>
 						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
 					</Button>
-					<Title style={styles.navBarTitle}>{'Home'}</Title>
+					<Title style={styles.navBarTitle}>{'Homes'}</Title>
 				</Header>
 				<View style={styles.container}>
 					<Content>
@@ -153,13 +160,10 @@ class Home extends React.Component {
 								>
 									Cargar Rutas
 							</Button>
-							<Button disabled={this.state.isLoading} style={styles.btn} onPress = {this.handleSyncButton.bind(this)}>
+							<Button style={styles.btn} onPress = {this.handleSyncButton.bind(this)}>
 								Sync
 							</Button>
-
 						</View>
-
-						{ spinner }
 					</Content>
 				</View>
 		</Container>

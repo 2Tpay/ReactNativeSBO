@@ -70,17 +70,17 @@ class RoutePlate extends React.Component {
           if(response ===true){
               write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
               //alert('creado');
-              Actions.pop({popNum: 3});
+              //Actions.pop({popNum: 3});
           }
         });
       }else{
           write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
           //alert('creado');
-          Actions.pop({popNum: 3});
+          //Actions.pop({popNum: 3});
       }
     })
-    .catch(error => {console.log(error);});
-    //*/
+    .catch(error => {console.log(error);});*/
+    //
     this.props.navigator.push({
       name: 'scanningView',
       passProps:{

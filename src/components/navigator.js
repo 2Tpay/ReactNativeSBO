@@ -10,6 +10,7 @@ import RouteDirection from './rutas/routeDirection';
 import RoutePlate from './rutas/routePlate';
 import ScanningView from './scanner/scanningView';
 import Login from "./login/login"
+import {logout} from "./api/requester"
 
 export default class Routing extends Component {
   constructor(){
@@ -30,12 +31,19 @@ export default class Routing extends Component {
       return false;
     });
   }
+  logoutUser(){
+    /*logout()
+    .then((response) => {
+      console.log(response);
+    }).catch( (error) => {console.log(error.message)})*/
+    console.log("LOG OUT");
+  }
   renderScene(route, navigator){
     switch (route.name) {
       case 'login':
         return <Login navigator={navigator} {...route.passProps}/>
       case 'home':
-        return <Home navigator={navigator} {...route.passProps}/>
+        return <Home navigator={navigator} logout={this.logoutUser} {...route.passProps}/>
       case 'rutasView':
         return <RutasView navigator={navigator} {...route.passProps} />
       case 'routeDirection':
