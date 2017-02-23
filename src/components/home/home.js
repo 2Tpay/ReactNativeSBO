@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from '../themes/styles';
-import {getRoutes, getCardsInformation, postTransaction} from './api/requester';
-import {write, readDir, unlink, exist, mkdir, read} from './FileSystem/fileSystem';
+import styles from '../../themes/styles';
+import {getRoutes, getCardsInformation, postTransaction} from '../api/requester';
+import {write, readDir, unlink, exist, mkdir, read} from '../FileSystem/fileSystem';
 import{
 	View,
 	Text,
@@ -15,6 +15,9 @@ import {
 	Button,
 	Content,
 	Container,
+	Icon,
+	Header,
+	Title
 } from 'native-base'
 
 import {
@@ -33,6 +36,12 @@ class Home extends React.Component {
 		this.state ={
 			rutas :[]
 		}
+
+		this.navigate = this.navigate.bind(this)
+	}
+
+	navigate(name){
+		this.props.navigator.push({name})
 	}
 
 	handleSyncButton(){
@@ -69,7 +78,7 @@ class Home extends React.Component {
 						read('trips/'+file.name)
 						.then((trip)=>{
 							if(trip.state==='available'){
-								
+
 								postTransaction(trip.routeId, trip.date,trip.busPlate, trip.routeDirection,trip.passengers)
 								.then((response) => {unlink('trips/'+file.name);})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
@@ -93,13 +102,10 @@ class Home extends React.Component {
 			<Container>
 				<View style={styles.container}>
 					<Content>
-						<Image source={require('../imgs/logo-4.png')} style={styles.shadow}></Image>
+						<Image source={require('../../imgs/logo-4.png')} style={styles.shadow}></Image>
 						<View style={styles.bg}>
-							<Text style ={styles.title}>
-								Hello
-							</Text>
 							<Button style={styles.btn} onPress = { () => {
-										Actions.rutasView();
+										this.props.navigator.push({name: 'rutasView'})
 								}}
 								>
 									Cargar Rutas

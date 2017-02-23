@@ -16,10 +16,13 @@ import {
 
 class RutaItem extends React.Component {
   HandleButton(id, name){
-    Actions.routeDirection({
-      rutaId: id,
-      routeName: name,
-    });
+    this.props.navigator.push({
+      name: 'routeDirection',
+      passProps:{
+        rutaId: id,
+        routeName: name
+        }
+      });
   }
   render(){
     return (

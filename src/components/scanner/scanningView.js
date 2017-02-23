@@ -71,6 +71,9 @@ class ScanningView extends React.Component {
     });
   };
 
+  handleFinishButton(){
+    this.props.navigator.popN(4);
+  }
   componentDidMount() {
 
       this._mounted = true;
@@ -97,10 +100,6 @@ class ScanningView extends React.Component {
       counter: this.state.counter+1,
       listViewData: newData
     });
-  }
-
-  HandleButton(){
-    //Actions.pop({popNum: 4});
   }
 
   searchUserByCarnet(carnet){
@@ -153,7 +152,7 @@ class ScanningView extends React.Component {
     						rightOpenValue={-75}
     					/>
           </View>
-          <TouchableHighlight style={styles.touchable} onPress={this.playSoundBundle}>
+          <TouchableHighlight style={styles.touchable} onPress={this.handleFinishButton.bind(this)}>
             <Text style={styles.touchableText}>Terminar</Text>
           </TouchableHighlight>
         </View>

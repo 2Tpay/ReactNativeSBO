@@ -40,7 +40,7 @@ class RutasView extends React.Component {
 						<Text style={styles.title}>
 							Mis rutas
 						</Text>
-						<Rutas rutas={this.state.rutas}/>
+						<Rutas navigator={this.props.navigator} rutas={this.state.rutas}/>
 					</View>
 
 			</Container>

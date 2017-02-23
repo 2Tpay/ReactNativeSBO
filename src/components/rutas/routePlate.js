@@ -79,12 +79,15 @@ class RoutePlate extends React.Component {
     })
     .catch(error => {console.log(error);});
     //*/
-    Actions.scanningView({
-      routeId: this.props.rutaId,
-      routeDirection: this.props.routeDirection,
-      busPlate: this.state.busPlate,
-      routeName: this.props.routeName
-    })
+    this.props.navigator.push({
+      name: 'scanningView',
+      passProps:{
+        routeId: this.props.rutaId,
+        routeDirection: this.props.routeDirection,
+        busPlate: this.state.busPlate,
+        routeName: this.props.routeName
+      }
+    });
 
   }
 

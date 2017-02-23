@@ -18,11 +18,17 @@ import {
 import { Row, Grid } from "react-native-easy-grid";
 const deviceWidth = Dimensions.get('window').width;
 class RouteDirection extends React.Component {
+  constructor(props){
+    super(props)
+  }
   HandleButton(id, direction, name){
-    Actions.routePlate({
-      rutaId: id,
-      routeDirection: direction,
-      routeName:name,
+    this.props.navigator.push({
+      name: 'routePlate',
+      passProps:{
+        rutaId: id,
+        routeDirection: direction,
+        routeName:name,
+      }
     });
   }
   render(){
