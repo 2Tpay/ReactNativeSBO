@@ -3,13 +3,14 @@ import Ajax from 'ajax-promise-es6';
 var my_path = 'http://bce1481b.ngrok.io/';
 
 export function searchUser(user){
-  return fetch(`https://api.github.com/users/${user}`)
+  /*return fetch(`https://api.github.com/users/${user}`)
 .then((response) => response.json())
 .then((response) => {
   const returnvalue = response.name ? response : [];
   return returnvalue;
 })
-.catch((error) => { console.log(error); });
+.catch((error) => { console.log(error); });*/
+return user
 }
 
 export function getRoutes(){
