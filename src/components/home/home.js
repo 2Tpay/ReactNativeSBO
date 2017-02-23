@@ -103,23 +103,20 @@ class Home extends React.Component {
 				.then(files =>{
 					files.forEach((file) =>{
 						//unlink(file.name);
-						console.log(file.name);
+						alert(file.name);
 						read('trips/'+file.name)
 						.then((trip)=>{
-							if(trip.state==='available'){
-
-								postTransaction(trip.routeId, trip.date,trip.busPlate, trip.routeDirection,trip.passengers)
+							  // alert(JSON.stringify(trip));
+								postTransaction(trip.idRuta, trip.fecha, trip.busPlaca, trip.tipoMovimiento, trip.transacciones)
 								.then((response) => {unlink('trips/'+file.name);})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
-							}
-
 						});
 					});
 					//unlink('trips');
 				})
 				.catch(error => {console.log(error);});
 			}
-			alert("	SYNCRONIZACION EXITOSA");
+			alert("Se han actualizado los datos de rutas, clientes, y subido los viajes pendientes.");
 		});
 		//console.log(RNFS.ExternalStorageDirectoryPath);
 		//console.log(RNFS.ExternalDirectoryPath);

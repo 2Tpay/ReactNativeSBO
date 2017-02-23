@@ -24,7 +24,7 @@ import {
 	Actions,
 } from 'react-native-router-flux';
 
-import { read } from '../FileSystem/fileSystem';
+import { read, write, exist, mkdir } from '../FileSystem/fileSystem';
 import { getTagId } from 'nfc-react-native';
 const Sound = require('react-native-sound');
 
@@ -45,10 +45,6 @@ class ScanningView extends React.Component {
       listViewData: [],
       tripClients: []
     };
-
-    AsyncStorage.getItem("text").then((value) => {
-      this.setState({text: value});
-    }).done();
   }
 
   deleteRow(secId, rowId, rowMap) {
@@ -86,7 +82,33 @@ class ScanningView extends React.Component {
     });
   };
 
+  writeTripsFile(){
+    let jsonTransaction = {
+      idRuta: this.props.routeId,
+      fecha: new Date().getTime(),
+      busPlaca: this.state.busPlate,
+      tipoMovimiento: this.props.routeDirection,
+      transacciones: this.state.tripClients
+    };
+
+    exist('trips')
+    .then(response =>{
+      if(!response) {
+        mkdir('trips')
+        .then(response => {
+          if(response){
+              write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+          }
+        });
+      }else{
+          write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+      }
+    })
+    .catch(error => {console.log(error);});
+  }
+
   handleFinishButton(){
+    this.writeTripsFile();
     this.props.navigator.popN(4);
   }
 
@@ -96,7 +118,8 @@ class ScanningView extends React.Component {
   			this.setState({
           counter: this.state.counter,
           clientes: success,
-          listViewData: this.state.listViewData
+          listViewData: this.state.listViewData,
+          tripClients: this.state.tripClients
         });
   		}).catch(error =>{alert(`Error al cargar info de clientes \n${error.message}`)});
 
@@ -114,7 +137,7 @@ class ScanningView extends React.Component {
             this.playClientAlreadyExistsSound();
           }
           this.addPassenger(cardId, traveller);
-          Alert.alert("Isaula: " + cardId);
+          // Alert.alert("Isaula: " + cardId);
       });
   }
 
@@ -147,22 +170,6 @@ class ScanningView extends React.Component {
       listViewData: newData,
       tripClients: this.state.tripClients
     });
-  }
-
-  searchUserByCarnet(carnet){
-      if(carnet != ''){
-       searchUser(carnet)
-        .then(response => {
-          if(response.length<=0){
-            alert("Carnet numero: "+ carnet+" no se ha encontrado");
-          }else{
-            this.addPassenger(response)
-          }
-        })
-        .catch((error) => {
-          throw error;
-        });
-      }
   }
 
   render(){

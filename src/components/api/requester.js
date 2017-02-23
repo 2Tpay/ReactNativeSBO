@@ -1,7 +1,7 @@
 import Ajax from 'ajax-promise-es6';
 
-var my_path = 'http://558edd43.ngrok.io/';
-var ACCESS_TOKEN = 'HArIbRUMAP958op0XGLkud6WPtlGaOhN3T3UaaGcx3gsCPElwVqMOoKZQqKg8TEe'
+var my_path = 'http://7c6d4eef.ngrok.io/';
+var ACCESS_TOKEN = 'dt7XZBYBeLJn7kt1E0wqc7XEMoTG9ScMYBmjJyYoND1oCayX8wOA2GbV81vmQiuk'
 export function searchUser(user){
   /*return fetch(`https://api.github.com/users/${user}`)
 .then((response) => response.json())
@@ -65,30 +65,17 @@ export function getCardsInformation(){
   .catch((error) => {console.log(error);});
 }
 
-export function postTransaction(routeId, date,routePlate, routeDirection, passengers){
-    let array = [];
-    passengers.forEach((passenger) =>{
-      array.push(passenger.idTarjeta);
-    });
-    let params = {
-      idRuta: routeId,
-      fecha: new Date(date).toISOString(),
-      busPlaca: routePlate,
-      tipoMovimiento: routeDirection,
-      busConductor: 'nada',
-      transacciones: array
-    }
-    //console.log("aqui=>", params);
-    //console.log(JSON.stringify(params));
-  /*Ajax.post('http://5eeba7fb.ngrok.io/api/Viajes/postVariousTransactions',params,{
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  }).then(res => {
-    console.log(`res: ${res}`);
-    //return res.json();
-  })
-  .catch(error => {console.log('errodfgr: ',error);});
-*/
+export function postTransaction(routeId, date, routePlate, routeDirection, passengers){
+  let params = {
+    idRuta: routeId,
+    fecha: new Date(date).toISOString(),
+    busPlaca: routePlate,
+    tipoMovimiento: routeDirection,
+    transacciones: passengers
+  }
+
+  alert(JSON.stringify(params));
+
   return fetch(`${my_path}api/Viajes/postVariousTransactions`, {
     method:'POST',
     headers: {
@@ -98,7 +85,7 @@ export function postTransaction(routeId, date,routePlate, routeDirection, passen
     },
     body:  JSON.stringify(params)
   })
-  .then((response) => {console.log("intento");return response.json()})
+  .then((response) => {alert(response); return response.json()})
   .catch((error) => {console.log(`error: ${error}`);});
 }
 
