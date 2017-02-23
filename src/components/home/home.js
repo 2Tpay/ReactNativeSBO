@@ -9,7 +9,8 @@ import{
 	TouchableOpacity,
 	Dimensions,
 	Image,
-	ActivityIndicator
+	ActivityIndicator,
+	NetInfo
 } from 'react-native';
 
 import {
@@ -25,21 +26,41 @@ import {
 	Actions,
 } from 'react-native-router-flux';
 
-
 const deviceHeight = Dimensions.get('window').height;
 //const background = require('../imgs/shadow.png');
 // write the file
-var RNFS = require('react-native-fs')
+let RNFS = require('react-native-fs')
+
 class Home extends React.Component {
 
 	constructor(){
 		super();
 		this.state ={
 			rutas :[],
-			isLoading: false
+			isLoading: false,
+			isConnected: false
 		}
 
-		this.navigate = this.navigate.bind(this)
+		this.navigate = this.navigate.bind(this);
+	}
+
+	setIsConnected(isConnected){
+		this.state.isConnected = isConnected;
+		if(!isConnected){
+			alert("Se ha perdido la conexión del internet.");
+		}
+	}
+
+	componentDidMount() {
+	  const dispatchConnected = isConnected => (this.setIsConnected(isConnected));
+
+	  NetInfo.isConnected.fetch().then(
+			isConnected => {
+			this.state.isConnected = isConnected;
+			}
+		 ).done(() => {
+	    NetInfo.isConnected.addEventListener('change', dispatchConnected);
+	  });
 	}
 
 	navigate(name){
@@ -47,6 +68,11 @@ class Home extends React.Component {
 	}
 
 	handleSyncButton(){
+		if(!this.state.isConnected){
+			alert("No se está conectado al internet; por lo tanto, no puede sincronizar los datos.");
+			return;
+		}
+
 		/*------------GETING--------------*/
 		this.state.isLoading = true;
 		let routes =[];
