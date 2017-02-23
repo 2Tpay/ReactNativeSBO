@@ -8,7 +8,8 @@ import{
 	StyleSheet,
 	TouchableOpacity,
 	Dimensions,
-	Image
+	Image,
+	ActivityIndicator
 } from 'react-native';
 
 import {
@@ -30,11 +31,12 @@ const deviceHeight = Dimensions.get('window').height;
 // write the file
 var RNFS = require('react-native-fs')
 class Home extends React.Component {
-	getRoutes
+
 	constructor(){
 		super();
 		this.state ={
-			rutas :[]
+			rutas :[],
+			isLoading: false
 		}
 
 		this.navigate = this.navigate.bind(this)
@@ -46,6 +48,7 @@ class Home extends React.Component {
 
 	handleSyncButton(){
 		/*------------GETING--------------*/
+		this.state.isLoading = true;
 		let routes =[];
 		getRoutes().then(res => {
 			routes = res;
@@ -96,8 +99,16 @@ class Home extends React.Component {
 		//console.log(RNFS.ExternalDirectoryPath);
 
 		//unlink('trips');
+
+		this.state.isLoading = false;
 	}
+
 	render(){
+		let spinner = this.state.isLoading ?
+    ( <ActivityIndicator
+        size='large'/> ) :
+    ( <View/>);
+
 		return (
 			<Container>
 				<Header style={styles.navBar}>
@@ -116,10 +127,13 @@ class Home extends React.Component {
 								>
 									Cargar Rutas
 							</Button>
-							<Button style={styles.btn} onPress = {this.handleSyncButton.bind(this)}>
+							<Button disabled={this.state.isLoading} style={styles.btn} onPress = {this.handleSyncButton.bind(this)}>
 								Sync
 							</Button>
+
 						</View>
+
+						{ spinner }
 					</Content>
 				</View>
 		</Container>
