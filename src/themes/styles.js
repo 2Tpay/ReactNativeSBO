@@ -1,5 +1,6 @@
 import {
-  StyleSheet
+  StyleSheet,
+  Platform
 } from 'react-native';
 
 module.exports = StyleSheet.create({
@@ -13,11 +14,23 @@ module.exports = StyleSheet.create({
 	container: {
     position: 'absolute',
 		justifyContent: 'center',
+    paddingTop: Platform.OS ==='ios'? 64: 54,
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: '#FBFAFA',
+  },
+  navBar: {
+    backgroundColor: '#2b3b5e',
+    elevation: 10,
+    flex:0
+  },
+  navBarTitle:{
+    color : "#FFF"
+  },
+  navBarButton:{
+    tintColor:'white'
   },
   shadow: {
     flex: 1,

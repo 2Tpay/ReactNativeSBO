@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from '../themes/styles';
-import {getRoutes, getCardsInformation, postTransaction} from './api/requester';
-import {write, readDir, unlink, exist, mkdir, read} from './FileSystem/fileSystem';
+import styles from '../../themes/styles';
+import {getRoutes, getCardsInformation, postTransaction} from '../api/requester';
+import {write, readDir, unlink, exist, mkdir, read} from '../FileSystem/fileSystem';
 import{
 	View,
 	Text,
@@ -15,6 +15,9 @@ import {
 	Button,
 	Content,
 	Container,
+	Icon,
+	Header,
+	Title
 } from 'native-base'
 
 import {
@@ -33,10 +36,17 @@ class Home extends React.Component {
 		this.state ={
 			rutas :[]
 		}
+
+		this.navigate = this.navigate.bind(this)
+	}
+
+	navigate(name){
+		this.props.navigator.push({name})
 	}
 
 	handleSyncButton(){
 		/*------------GETING--------------*/
+
 		let routes =[];
 		getRoutes().then(res => {
 			routes = res;
@@ -55,9 +65,49 @@ class Home extends React.Component {
 			write('cardsInformation.txt',JSON.stringify(passengers.getWithClient));
 		})
 		.catch(error => {alert(`ERROR AL SYNC TARJETAS \n${error}`)});
+		
 
 		/*-----------POSTING------------*/
 
+		/*let jsonTransaction = {
+      routeId: 1,
+      routeDirection: 'Entrada',
+      busPlate: 'NADA',
+      routeName: 'No nos importa',
+      date: new Date().getTime(),
+      state: 'available',
+      passengers:[
+        {
+          idTarjeta: "62b2fdfc"
+        },
+        {
+          idTarjeta: "62b2fdfc"
+        },
+        {
+          idTarjeta: "62b2fdfc"
+        }
+    ]
+    };
+    exist('trips')
+    .then(response =>{
+      console.log(`exist: ${response}`);
+      if(response ===false){
+        mkdir('trips')
+        .then(response => {
+          if(response ===true){
+              write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+              //alert('creado');
+              //Actions.pop({popNum: 3});
+          }
+        });
+      }else{
+          write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+          //alert('creado');
+          //Actions.pop({popNum: 3});
+      }
+    })
+    .catch(error => {console.log(error);});
+*/
 		exist('trips')
 		.then((res) =>{
 			if(res===true){
@@ -69,7 +119,7 @@ class Home extends React.Component {
 						read('trips/'+file.name)
 						.then((trip)=>{
 							if(trip.state==='available'){
-								
+
 								postTransaction(trip.routeId, trip.date,trip.busPlate, trip.routeDirection,trip.passengers)
 								.then((response) => {unlink('trips/'+file.name);})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
@@ -88,18 +138,24 @@ class Home extends React.Component {
 
 		//unlink('trips');
 	}
+	handleLogout(){
+		console.log("LOGEO");
+	}
 	render(){
 		return (
 			<Container>
+				<Header style={styles.navBar}>
+					<Button transparent onPress={this.handleLogout.bind(this)}>
+						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
+					</Button>
+					<Title style={styles.navBarTitle}>{'Homes'}</Title>
+				</Header>
 				<View style={styles.container}>
 					<Content>
-						<Image source={require('../imgs/logo-4.png')} style={styles.shadow}></Image>
+						<Image source={require('../../imgs/logo-4.png')} style={styles.shadow}></Image>
 						<View style={styles.bg}>
-							<Text style ={styles.title}>
-								Hello
-							</Text>
 							<Button style={styles.btn} onPress = { () => {
-										Actions.rutasView();
+										this.props.navigator.push({name: 'rutasView'})
 								}}
 								>
 									Cargar Rutas

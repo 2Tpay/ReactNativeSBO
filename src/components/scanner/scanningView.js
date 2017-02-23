@@ -9,18 +9,22 @@ import {
   TouchableHighlight,
   AsyncStorage,
   DeviceEventEmitter,
-  ListView
+  ListView,
+  TouchableOpacity,
 } from 'react-native';
 import Hr from 'react-native-hr';
 
 import {
   Container,
-  Button
+  Button,
+  Header,
+  Title
 } from 'native-base';
 import {
 	Actions,
 } from 'react-native-router-flux';
 
+import { read } from '../FileSystem/fileSystem';
 import { getTagId } from 'nfc-react-native';
 const Sound = require('react-native-sound');
 
@@ -30,64 +34,106 @@ const Sound = require('react-native-sound');
 
 import globalStyles from '../../themes/styles'
 import styles from './styles';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { SwipeListView,SwipeRow } from 'react-native-swipe-list-view';
 class ScanningView extends React.Component {
   constructor(){
     super();
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      user_details : [],
       counter : 0,
-      listViewData: Array(20).fill('').map((_,i)=>`item #${i}`)
+      clientes: [],
+      listViewData: []//Array(10).fill('').map((_,i)=>`item #${i}`)
     };
 
     AsyncStorage.getItem("text").then((value) => {
       this.setState({text: value});
     }).done();
-
-
-
   }
+
   deleteRow(secId, rowId, rowMap) {
 		rowMap[`${secId}${rowId}`].closeRow();
-		const newData = [...this.state.listViewData];
+		let newData = [...this.state.listViewData];
 		newData.splice(rowId, 1);
-		this.setState({listViewData: newData});
-}
+		this.setState({
+      counter: this.state.counter-1,
+      clientes: this.state.clientes,
+      listViewData: newData
+    });
+  }
 
-
-  playSoundBundle () {
+  playClientDetectedSound () {
     const s = new Sound('button_beep_tone.mp3', Sound.MAIN_BUNDLE, (e) => {
       if (e) {
         console.log('error', e);
       } else {
         s.setSpeed(1);
-        console.log('duration', s.getDuration());
         s.play(() => s.release()); // Release when it's done so we're not using up resources
       }
     });
   };
 
+  playClientAlreadyExistsSound () {
+    const s = new Sound('beep_tone.mp3', Sound.MAIN_BUNDLE, (e) => {
+      if (e) {
+        console.log('error', e);
+      } else {
+        s.setSpeed(1);
+        s.play(() => s.release()); // Release when it's done so we're not using up resources
+      }
+    });
+  };
+
+  handleFinishButton(){
+    this.props.navigator.popN(4);
+  }
+
   componentDidMount() {
+  		read('cardsInformation.txt')
+  		.then((success)=>{
+  			this.setState({
+          counter: this.state.counter,
+          clientes: success,
+          listViewData: this.state.listViewData
+        });
+  		}).catch(error =>{alert(`Error al cargar info de clientes \n${error.message}`)});
 
-      this._mounted = true;
-      // this.startNFCloop();
-
+      //NFC events
       DeviceEventEmitter.addListener('onTagError', function (e) {
           console.log('error', e)
-          // alert(JSON.stringify(e))
       });
 
-
       DeviceEventEmitter.addListener('onTagDetected', (e) => {
-          let stringifiedId = JSON.stringify(e);
-          this.playSoundBundle();
-          Alert.alert("Isaula: " + stringifiedId);
-          // this.state.user_details.name = stringifiedId;
+          let cardId = e.id;
+          if(this.searchClientByCardId(cardId)){
+            this.playClientDetectedSound();
+          } else {
+            this.playClientAlreadyExistsSound();
+          }
+          this.addPassenger(cardId);
+          Alert.alert("Isaula: " + cardId);
       });
   }
 
-  HandleButton(){
-    //Actions.pop({popNum: 4});
+  searchClientByCardId(cardId){
+    let clientFound = false;
+    if(this.state.clientes.length > 0)
+    {
+      let clientFoundArray = this.state.clientes.filter( client => client.id_tarjeta == cardId);
+
+      clientFound = clientFoundArray.length > 0;
+    }
+
+    return clientFound;
+  }
+
+  addPassenger(passenger){
+    let newData = this.state.listViewData;
+    newData.unshift(passenger)
+    this.setState({
+      counter: this.state.counter+1,
+      clientes: this.state.clientes,
+      listViewData: newData
+    });
   }
 
   searchUserByCarnet(carnet){
@@ -97,12 +143,7 @@ class ScanningView extends React.Component {
           if(response.length<=0){
             alert("Carnet numero: "+ carnet+" no se ha encontrado");
           }else{
-            this.setState({
-              user_details : response,
-              counter: this.state.counter +1,
-              userCarnet: "",
-            });
-            this._textInput.setNativeProps({text: ''});
+            this.addPassenger(response)
           }
         })
         .catch((error) => {
@@ -112,39 +153,49 @@ class ScanningView extends React.Component {
   }
 
   render(){
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return (
-      <Container style={styles.container}>
-        <View>
-          <Text style={globalStyles.title}>Ingreso de pasajeros</Text>
-          <Text style={styles.text}>Bus de {this.props.routeName} en dirección {this.props.routeDirection} {this.props.routeDirection=="entrada"?'al':'del'} templo</Text>
-          <Text style={styles.text}>
-            Num. Pasajeros: {this.state.counter}
-          </Text>
-          <Text style={styles.text}>
-            Carnet:
-          </Text>
-          <TextInput returnKeyType="search" ref={component => this._textInput = component} style={styles.formInput} placeholder="Ingrese número de carnet" onChangeText={(text)=>
-            {
-              this.setState({
-                user_details: this.state.user_details,
-                counter: this.state.counter,
-                userCarnet: text
-              });
-            }
-          }/>
-        <Button style={styles.btn} onPress={this.playSoundBundle}>
-          Ingresar
-        </Button>
-        <Hr lineColor='#b3b3b3' text='Pasajeros' />
+        <View style={styles.container}>
+          <Header style={globalStyles.navBar}>
+  					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
+  						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
+  					</Button>
+  					<Title style={globalStyles.navBarTitle}>{'Escaner'}</Title>
+  				</Header>
+            <Text style={globalStyles.title}>Ingreso de pasajeros</Text>
+            <Text style={styles.text}>Bus de {this.props.routeName} en dirección {this.props.routeDirection} {this.props.routeDirection=="entrada"?'al':'del'} templo</Text>
+            <Text style={styles.text}>
+              Num. Pasajeros: {this.state.counter}
+            </Text>
+          <Hr lineColor='#b3b3b3' text='Pasajeros' />
 
-          <View style={styles.informationUser}>
-          </View>
-          <TouchableHighlight style={styles.touchable} onPress={this.playSoundBundle}>
-            <Text style={styles.touchableText}>Terminar</Text>
-          </TouchableHighlight>
+            <View style={styles.informationUser}>
+      					<SwipeListView
+                  swipeRowStyle={{flex: 1}}
+                  enableEmptySections={true}
+      						dataSource={this.ds.cloneWithRows(this.state.listViewData)}
+      						renderRow={ data => (
+      							<TouchableHighlight
+      								style={styles.rowFront}
+      							>
+      								<View>
+      									<Text>{data}</Text>
+      								</View>
+      							</TouchableHighlight>
+      						)}
+      						renderHiddenRow={ (data, secId, rowId, rowMap) => (
+      							<View style={styles.rowBack}>
+      								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => this.deleteRow(secId, rowId, rowMap) }>
+      									<Text style={styles.backTextWhite}>Delete</Text>
+      								</TouchableOpacity>
+      							</View>
+      						)}
+      						rightOpenValue={-75}
+      					/>
+            </View>
+            <TouchableHighlight style={styles.touchable} onPress={this.handleFinishButton.bind(this)}>
+              <Text style={styles.touchableText}>Terminar</Text>
+            </TouchableHighlight>
         </View>
-      </Container>
     );
   }
 }

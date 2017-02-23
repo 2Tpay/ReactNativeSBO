@@ -12,6 +12,8 @@ import {
 	Container,
 	Content,
 	Button,
+	Header,
+	Title
 } from 'native-base'
 var RNFS = require('react-native-fs');
 
@@ -35,12 +37,18 @@ class RutasView extends React.Component {
 
 	render(){
 		return (
-			<Container style={mystyles.container}>
-					<View>
+			<Container>
+				<Header style={styles.navBar}>
+					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
+						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
+					</Button>
+					<Title style={styles.navBarTitle}>{'Rutas'}</Title>
+				</Header>
+					<View style={mystyles.container}>
 						<Text style={styles.title}>
 							Mis rutas
 						</Text>
-						<Rutas rutas={this.state.rutas}/>
+						<Rutas navigator={this.props.navigator} rutas={this.state.rutas}/>
 					</View>
 
 			</Container>

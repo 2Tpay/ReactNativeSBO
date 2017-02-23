@@ -1,15 +1,63 @@
 import Ajax from 'ajax-promise-es6';
 
-var my_path = 'http://bce1481b.ngrok.io/';
+var my_path = 'http://7c6d4eef.ngrok.io/';
+var ACCESS_TOKEN = ''
 
+export function setAccessToken(id){
+  ACCESS_TOKEN = id;
+  console.log("token set "+ACCESS_TOKEN);
+}
 export function searchUser(user){
-  return fetch(`https://api.github.com/users/${user}`)
+  /*return fetch(`https://api.github.com/users/${user}`)
 .then((response) => response.json())
 .then((response) => {
   const returnvalue = response.name ? response : [];
   return returnvalue;
 })
-.catch((error) => { console.log(error); });
+.catch((error) => { console.log(error); });*/
+return user
+}
+
+export function login(email, password){
+    let params = {
+      email: email,
+      password: password
+    }
+    return fetch(`${my_path}api/Users/login`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+    }).then((res) => {
+      //if(res.status >=200 && res.status <=300)
+        return res.json()
+    })
+    .then( (res) =>{
+      //console.log(res);
+      const returnValue = res.id? res: 'Error de autenticacion'
+      //console.log(returnValue);
+      return returnValue
+    })
+    .catch((error) => {
+      alert(error.message)
+      throw error
+    });
+}
+
+export function logout(){
+  return fetch(`${my_path}api/Users/logout?access_token=${ACCESS_TOKEN}`,{
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+    .then( (res) =>{
+      console.log(res);
+      return res
+    }).catch((error) => {console.log(error.message)})
 }
 
 export function getRoutes(){
@@ -18,6 +66,7 @@ export function getRoutes(){
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN
   }
 })
 .then((response) => {return response.json()})
@@ -30,6 +79,7 @@ export function getCardsInformation(){
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
+      'Authorization': ACCESS_TOKEN
     }
   })
   .then((response) => {return response.json()})
@@ -46,7 +96,6 @@ export function postTransaction(routeId, date,routePlate, routeDirection, passen
       fecha: new Date(date).toISOString(),
       busPlaca: routePlate,
       tipoMovimiento: routeDirection,
-      busConductor: 'nada',
       transacciones: array
     }
     //console.log("aqui=>", params);
@@ -65,6 +114,7 @@ export function postTransaction(routeId, date,routePlate, routeDirection, passen
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
+      'Authorization': ACCESS_TOKEN
     },
     body:  JSON.stringify(params)
   })

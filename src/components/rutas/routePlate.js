@@ -16,7 +16,9 @@ import globalStyles from '../../themes/styles';
 import {write, exist, mkdir} from '../FileSystem/fileSystem';
 import {
   Container,
-  Button
+  Button,
+  Header,
+  Title
 } from 'native-base';
 //import ScanningView from '../scanner/scanningView';
 
@@ -68,23 +70,26 @@ class RoutePlate extends React.Component {
           if(response ===true){
               write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
               //alert('creado');
-              Actions.pop({popNum: 3});
+              //Actions.pop({popNum: 3});
           }
         });
       }else{
           write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
           //alert('creado');
-          Actions.pop({popNum: 3});
+          //Actions.pop({popNum: 3});
       }
     })
-    .catch(error => {console.log(error);});
-    //*/
-    Actions.scanningView({
-      routeId: this.props.rutaId,
-      routeDirection: this.props.routeDirection,
-      busPlate: this.state.busPlate,
-      routeName: this.props.routeName
-    })
+    .catch(error => {console.log(error);});*/
+    //
+    this.props.navigator.push({
+      name: 'scanningView',
+      passProps:{
+        routeId: this.props.rutaId,
+        routeDirection: this.props.routeDirection,
+        busPlate: this.state.busPlate,
+        routeName: this.props.routeName
+      }
+    });
 
   }
 
@@ -96,38 +101,46 @@ class RoutePlate extends React.Component {
 
   render(){
     return (
-      <Container style={styles.container}>
-        <View style={styles.title}>
-          <Text style={globalStyles.title}>Casi listos</Text>
-        </View>
-        <View style={styles.imgBackground}>
-          <Text style={styles.informationTitle}>Información de ruta</Text>
-          <Image source ={require('../../imgs/bus_information2.png')} style={styles.img}></Image>
-          <View style={styles.informationText}>
-            <Text style={styles.text}>
-              ID de ruta: {this.props.rutaId}
-            </Text>
-            <Text style={styles.text}>
-              Nombre: {this.props.routeName}
-            </Text>
-            <Text style={styles.text}>
-              En dirección: {this.props.routeDirection}
-            </Text>
+      <Container>
+        <Header style={globalStyles.navBar}>
+					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
+						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
+					</Button>
+					<Title style={globalStyles.navBarTitle}>{'Información de Bus'}</Title>
+				</Header>
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <Text style={globalStyles.title}>Casi listos</Text>
           </View>
-        </View>
-        <View>
-          <TextInput
-            style={styles.formInput}
-            returnKeyType="next"
-            placeholder={this.state.text}
-            onChangeText={(text) => this.saveData(text)}
-            onSubmitEditing={this.HandleButton.bind(this)}
-          />
+          <View style={styles.imgBackground}>
+            <Text style={styles.informationTitle}>Información de ruta</Text>
+            <Image source ={require('../../imgs/bus_information2.png')} style={styles.img}></Image>
+            <View style={styles.informationText}>
+              <Text style={styles.text}>
+                ID de ruta: {this.props.rutaId}
+              </Text>
+              <Text style={styles.text}>
+                Nombre: {this.props.routeName}
+              </Text>
+              <Text style={styles.text}>
+                En dirección: {this.props.routeDirection}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <TextInput
+              style={styles.formInput}
+              returnKeyType="next"
+              placeholder={this.state.text}
+              onChangeText={(text) => this.saveData(text)}
+              onSubmitEditing={this.HandleButton.bind(this)}
+            />
 
 
-        <Button style={styles.btn} onPress={this.HandleButton.bind(this)}>
-          Continuar
-        </Button>
+            <Button style={styles.btn} onPress={this.HandleButton.bind(this)}>
+              Continuar
+            </Button>
+          </View>
         </View>
       </Container>
     );

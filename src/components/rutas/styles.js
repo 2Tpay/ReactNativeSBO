@@ -1,6 +1,6 @@
 
 const React = require('react-native');
-const { StyleSheet, Dimensions } = React;
+const { StyleSheet, Dimensions, Platform } = React;
 const deviceWidth = Dimensions.get('window').width;
 
 
@@ -13,6 +13,7 @@ module.exports = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#FBFAFA',
+    paddingTop: Platform.OS ==='ios'? 64: 54,
   },
   row: {
     alignItems: 'center',
