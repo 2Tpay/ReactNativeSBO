@@ -15,11 +15,9 @@ module.exports = StyleSheet.create({
       right:-60,
   },
   container: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     backgroundColor: '#FBFAFA',
   },
   informationUser: {
@@ -27,7 +25,42 @@ module.exports = StyleSheet.create({
     margin: 5,
     borderWidth: 1,
     borderColor: '#2b3b5e',
+    overflow: 'scroll',
+    height: 265
+
   },
+  rowFront: {
+		alignItems: 'center',
+		backgroundColor: 'white',
+		borderBottomColor: 'black',
+		borderBottomWidth: 1,
+		justifyContent: 'center',
+		height: 50,
+    flex:1
+	},
+  backTextWhite: {
+		color: '#FFF'
+	},
+  rowBack: {
+		alignItems: 'center',
+		backgroundColor: '#DDD',
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		paddingLeft: 15,
+	},
+  backRightBtn: {
+		alignItems: 'center',
+		bottom: 0,
+		justifyContent: 'center',
+		position: 'absolute',
+		top: 0,
+		width: 75
+	},
+	backRightBtnRight: {
+		backgroundColor: 'red',
+		right: 0
+	},
   text:{
     color:'black',
     marginTop: 10 ,
@@ -35,7 +68,6 @@ module.exports = StyleSheet.create({
     fontSize: 15
   },
   touchable:{
-    bottom:0,
     marginTop: 20,
     paddingTop:10,
     height: 50,

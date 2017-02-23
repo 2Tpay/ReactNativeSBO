@@ -9,7 +9,8 @@ import {
   TouchableHighlight,
   AsyncStorage,
   DeviceEventEmitter,
-  ListView
+  ListView,
+  TouchableOpacity,
 } from 'react-native';
 import Hr from 'react-native-hr';
 
@@ -30,14 +31,14 @@ const Sound = require('react-native-sound');
 
 import globalStyles from '../../themes/styles'
 import styles from './styles';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { SwipeListView,SwipeRow } from 'react-native-swipe-list-view';
 class ScanningView extends React.Component {
   constructor(){
     super();
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      user_details : [],
       counter : 0,
-      listViewData: Array(20).fill('').map((_,i)=>`item #${i}`)
+      listViewData: []//Array(10).fill('').map((_,i)=>`item #${i}`)
     };
 
     AsyncStorage.getItem("text").then((value) => {
@@ -49,9 +50,12 @@ class ScanningView extends React.Component {
   }
   deleteRow(secId, rowId, rowMap) {
 		rowMap[`${secId}${rowId}`].closeRow();
-		const newData = [...this.state.listViewData];
+		let newData = [...this.state.listViewData];
 		newData.splice(rowId, 1);
-		this.setState({listViewData: newData});
+		this.setState({
+      counter: this.state.counter-1,
+      listViewData: newData
+    });
 }
 
 
@@ -86,6 +90,15 @@ class ScanningView extends React.Component {
       });
   }
 
+  addPassenger(passanger){
+    let newData = this.state.listViewData;
+    newData.unshift(passanger)
+    this.setState({
+      counter: this.state.counter+1,
+      listViewData: newData
+    });
+  }
+
   HandleButton(){
     //Actions.pop({popNum: 4});
   }
@@ -97,12 +110,7 @@ class ScanningView extends React.Component {
           if(response.length<=0){
             alert("Carnet numero: "+ carnet+" no se ha encontrado");
           }else{
-            this.setState({
-              user_details : response,
-              counter: this.state.counter +1,
-              userCarnet: "",
-            });
-            this._textInput.setNativeProps({text: ''});
+            this.addPassenger(response)
           }
         })
         .catch((error) => {
@@ -112,10 +120,8 @@ class ScanningView extends React.Component {
   }
 
   render(){
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return (
-      <Container style={styles.container}>
-        <View>
+        <View style={styles.container}>
           <Text style={globalStyles.title}>Ingreso de pasajeros</Text>
           <Text style={styles.text}>Bus de {this.props.routeName} en dirección {this.props.routeDirection} {this.props.routeDirection=="entrada"?'al':'del'} templo</Text>
           <Text style={styles.text}>
@@ -124,27 +130,49 @@ class ScanningView extends React.Component {
           <Text style={styles.text}>
             Carnet:
           </Text>
-          <TextInput returnKeyType="search" ref={component => this._textInput = component} style={styles.formInput} placeholder="Ingrese número de carnet" onChangeText={(text)=>
-            {
-              this.setState({
-                user_details: this.state.user_details,
-                counter: this.state.counter,
-                userCarnet: text
-              });
+          <TextInput
+            ref="textId"
+            style={styles.formInput}
+            placeholder="Ingrese número de carnet"
+            onChangeText={(text) => {
+                this._textInput = text
+              }
             }
-          }/>
-        <Button style={styles.btn} onPress={this.playSoundBundle}>
-          Ingresar
-        </Button>
+            />
+          <Button style={styles.btn} onPress={this.searchUserByCarnet.bind(this, this._textInput)}>
+            Ingresar
+          </Button>
+
         <Hr lineColor='#b3b3b3' text='Pasajeros' />
 
           <View style={styles.informationUser}>
+    					<SwipeListView
+                swipeRowStyle={{flex: 1}}
+                enableEmptySections={true}
+    						dataSource={this.ds.cloneWithRows(this.state.listViewData)}
+    						renderRow={ data => (
+    							<TouchableHighlight
+    								style={styles.rowFront}
+    							>
+    								<View>
+    									<Text>{data}</Text>
+    								</View>
+    							</TouchableHighlight>
+    						)}
+    						renderHiddenRow={ (data, secId, rowId, rowMap) => (
+    							<View style={styles.rowBack}>
+    								<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => this.deleteRow(secId, rowId, rowMap) }>
+    									<Text style={styles.backTextWhite}>Delete</Text>
+    								</TouchableOpacity>
+    							</View>
+    						)}
+    						rightOpenValue={-75}
+    					/>
           </View>
           <TouchableHighlight style={styles.touchable} onPress={this.playSoundBundle}>
             <Text style={styles.touchableText}>Terminar</Text>
           </TouchableHighlight>
         </View>
-      </Container>
     );
   }
 }
