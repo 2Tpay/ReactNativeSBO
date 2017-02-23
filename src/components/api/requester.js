@@ -1,20 +1,15 @@
 import Ajax from 'ajax-promise-es6';
 
-var my_path = 'http://7c6d4eef.ngrok.io/';
-var ACCESS_TOKEN = 'dt7XZBYBeLJn7kt1E0wqc7XEMoTG9ScMYBmjJyYoND1oCayX8wOA2GbV81vmQiuk'
-export function searchUser(user){
-  /*return fetch(`https://api.github.com/users/${user}`)
-.then((response) => response.json())
-.then((response) => {
-  const returnvalue = response.name ? response : [];
-  return returnvalue;
-})
-.catch((error) => { console.log(error); });*/
-return user
+var my_path = 'http://0563ef20.ngrok.io/';
+
+var ACCESS_TOKEN = '';
+
+export function setAccessToken(id){
+  ACCESS_TOKEN = id;
+  console.log("token set "+ACCESS_TOKEN);
 }
 
 export function login(email, password){
-  try{
     let params = {
       email: email,
       password: password
@@ -27,16 +22,33 @@ export function login(email, password){
       },
       body: JSON.stringify(params)
     }).then((res) => {
-      console.log(res);
-      let { id, userId, ttl } = res;
-      console.log(`id ${id}`);
-      console.log('user id '+userId);
+      //if(res.status >=200 && res.status <=300)
+        return res.json()
     })
-    .catch((error) => {console.log(error)});
+    .then( (res) =>{
+      //console.log(res);
+      const returnValue = res.id? res: 'Error de autenticacion'
+      //console.log(returnValue);
+      return returnValue
+    })
+    .catch((error) => {
+      alert(error.message)
+      throw error
+    });
+}
 
-  } catch (errors){
-
-  }
+export function logout(){
+  return fetch(`${my_path}api/Users/logout?access_token=${ACCESS_TOKEN}`,{
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+    .then( (res) =>{
+      console.log(res);
+      return res
+    }).catch((error) => {console.log(error.message)})
 }
 
 export function getRoutes(){
@@ -74,8 +86,20 @@ export function postTransaction(routeId, date, routePlate, routeDirection, passe
     transacciones: passengers
   }
 
-  alert(JSON.stringify(params));
+  // alert(JSON.stringify(params));
 
+// export function postTransaction(routeId, date,routePlate, routeDirection, passengers){
+//     let array = [];
+//     passengers.forEach((passenger) =>{
+//       array.push(passenger.idTarjeta);
+//     });
+//     let params = {
+//       idRuta: routeId,
+//       fecha: new Date(date).toISOString(),
+//       busPlaca: routePlate,
+//       tipoMovimiento: routeDirection,
+//       transacciones: array
+//     }
   return fetch(`${my_path}api/Viajes/postVariousTransactions`, {
     method:'POST',
     headers: {
@@ -85,7 +109,7 @@ export function postTransaction(routeId, date, routePlate, routeDirection, passe
     },
     body:  JSON.stringify(params)
   })
-  .then((response) => {alert(response); return response.json()})
+  .then((response) => { return response.json()})
   .catch((error) => {console.log(`error: ${error}`);});
 }
 

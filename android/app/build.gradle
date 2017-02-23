@@ -96,6 +96,19 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+      release {
+        storeFile file("../.gradle/gradle.properties")
+        storePassword "admin123"
+        keyAlias "my-key-alias"
+        keyPassword "admin123"
+      }
+    }
+    buildTypes {
+      release {
+        signingConfig signingConfigs.release
+        }
+    }
     splits {
         abi {
             reset()

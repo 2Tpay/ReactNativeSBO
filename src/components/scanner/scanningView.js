@@ -86,7 +86,7 @@ class ScanningView extends React.Component {
     let jsonTransaction = {
       idRuta: this.props.routeId,
       fecha: new Date().getTime(),
-      busPlaca: this.state.busPlate,
+      busPlaca: this.props.busPlate,
       tipoMovimiento: this.props.routeDirection,
       transacciones: this.state.tripClients
     };

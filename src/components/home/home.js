@@ -88,8 +88,6 @@ class Home extends React.Component {
 		let passengers = [];
 		getCardsInformation().then(res => {
 			passengers= res;
-			//console.log("aquiii");
-			//console.log(passengers.getWithClient);
 			write('cardsInformation.txt',JSON.stringify(passengers.getWithClient));
 		})
 		.catch(error => {alert(`ERROR AL SYNC TARJETAS \n${error}`)});
@@ -106,8 +104,7 @@ class Home extends React.Component {
 						alert(file.name);
 						read('trips/'+file.name)
 						.then((trip)=>{
-							  // alert(JSON.stringify(trip));
-								postTransaction(trip.idRuta, trip.fecha, trip.busPlaca, trip.tipoMovimiento, trip.transacciones)
+							  postTransaction(trip.idRuta, trip.fecha, trip.busPlaca, trip.tipoMovimiento, trip.transacciones)
 								.then((response) => {unlink('trips/'+file.name);})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
 						});

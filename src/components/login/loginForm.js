@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, TextInput, TouchableOpacity, Text,StatusBar} from 'react-native';
-import {login} from "../api/requester"
+import {login, setAccessToken} from "../api/requester"
 import {
 	Actions,
 } from 'react-native-router-flux';
@@ -11,22 +11,35 @@ export default class LoginForm extends Component {
     this.state ={
       name: "",
       password: "",
-      error: ""
+      errors: ""
     }
   }
-navigate(name){
-  //this.props.navigator.push({name:name});
-
-}
 
 handleSubmitButton(){
-  //login(this.state.name, this.state.password)
-  this.props.navigator.push({
+	if(this.state.name !=""){
+		if(this.state.password !=""){
+			login(this.state.name, this.state.password)
+			.then((response) => {
+				if(response.id){
+					setAccessToken(response.id);
+					this.setState({errors:""})
+					this.props.navigator.push({name:'home'});
+				}else
+					this.setState({errors:response})
+			})
+			.catch((error) => {this.setState({errors:error.message}); console.log(error.message);})
+		}else{
+				this.setState({errors:"Contraseña no puede estar vacio"})
+		}
+	}else{
+		this.setState({errors:"Email no puede estar vacio"})
+	}
+	/*this.props.navigator.push({
 		name:'home',
 		passProps:{
 			title:'Home'
 		}
-	});
+	});*/
   //Actions.home();
 }
   render(){
@@ -35,6 +48,7 @@ handleSubmitButton(){
         <StatusBar
             barStyle="light-content"
           />
+				<Text style={styles.errorLabel}>{this.state.errors?this.state.errors :""}</Text>
         <TextInput
           placeholder="email"
           placeholderTextColor="rgba(255,255,255,0.7)"
@@ -73,9 +87,12 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: 'rgba(255,255,255,0.2)',
     marginBottom: 15,
-    color: '#2c3e50',
+    color: '#FFF',
     paddingHorizontal: 10,
   },
+	errorLabel:{
+		color:'red'
+	},
   buttonContainer:{
     backgroundColor: '#2980b9',
     paddingVertical: 15
