@@ -127,22 +127,6 @@ class ScanningView extends React.Component {
           <Text style={styles.text}>
             Num. Pasajeros: {this.state.counter}
           </Text>
-          <Text style={styles.text}>
-            Carnet:
-          </Text>
-          <TextInput
-            ref="textId"
-            style={styles.formInput}
-            placeholder="Ingrese número de carnet"
-            onChangeText={(text) => {
-                this._textInput = text
-              }
-            }
-            />
-          <Button style={styles.btn} onPress={this.searchUserByCarnet.bind(this, this._textInput)}>
-            Ingresar
-          </Button>
-
         <Hr lineColor='#b3b3b3' text='Pasajeros' />
 
           <View style={styles.informationUser}>
