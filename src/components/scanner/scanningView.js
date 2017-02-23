@@ -22,6 +22,7 @@ import {
 	Actions,
 } from 'react-native-router-flux';
 
+import { read } from '../FileSystem/fileSystem';
 import { getTagId } from 'nfc-react-native';
 const Sound = require('react-native-sound');
 
@@ -38,34 +39,44 @@ class ScanningView extends React.Component {
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       counter : 0,
+      clientes: [],
       listViewData: []//Array(10).fill('').map((_,i)=>`item #${i}`)
     };
 
     AsyncStorage.getItem("text").then((value) => {
       this.setState({text: value});
     }).done();
-
-
-
   }
+
   deleteRow(secId, rowId, rowMap) {
 		rowMap[`${secId}${rowId}`].closeRow();
 		let newData = [...this.state.listViewData];
 		newData.splice(rowId, 1);
 		this.setState({
       counter: this.state.counter-1,
+      clientes: this.state.clientes,
       listViewData: newData
     });
-}
+  }
 
 
-  playSoundBundle () {
+  playClientDetectedSound () {
     const s = new Sound('button_beep_tone.mp3', Sound.MAIN_BUNDLE, (e) => {
       if (e) {
         console.log('error', e);
       } else {
         s.setSpeed(1);
-        console.log('duration', s.getDuration());
+        s.play(() => s.release()); // Release when it's done so we're not using up resources
+      }
+    });
+  };
+
+  playClientAlreadyExistsSound () {
+    const s = new Sound('beep_tone.mp3', Sound.MAIN_BUNDLE, (e) => {
+      if (e) {
+        console.log('error', e);
+      } else {
+        s.setSpeed(1);
         s.play(() => s.release()); // Release when it's done so we're not using up resources
       }
     });
@@ -74,28 +85,49 @@ class ScanningView extends React.Component {
   handleFinishButton(){
     this.props.navigator.popN(4);
   }
+
   componentDidMount() {
+  		// read('cardsInformation.txt')
+  		// .then((success)=>{
+  		// 	this.setState({
+      //     counter: this.state.counter,
+      //     clientes: success,
+      //     listViewData: this.listViewData
+      //   });
+  		// }).catch(error =>{alert(`Error al cargar info de clientes \n${error.message}`)});
 
-      this._mounted = true;
-      // this.startNFCloop();
-
+      //NFC events
       DeviceEventEmitter.addListener('onTagError', function (e) {
           console.log('error', e)
-          // alert(JSON.stringify(e))
       });
 
-
       DeviceEventEmitter.addListener('onTagDetected', (e) => {
-          let stringifiedId = JSON.stringify(e);
-          this.playSoundBundle();
-          Alert.alert("Isaula: " + stringifiedId);
-          // this.state.user_details.name = stringifiedId;
+          let cardId = e.id;
+          // let cardId = JSON.stringify(e);
+          // let cardId = stringifiedCard.id;
+          if(this.searchClientByCardId(cardId)){
+            this.playClientDetectedSound();
+          } else {
+            this.playClientAlreadyExistsSound();
+          }
+          this.state.clientes.unshift(cardId);
+          Alert.alert("Isaula: " + cardId);
       });
   }
 
-  addPassenger(passanger){
+  searchClientByCardId(cardId){
+    let clientFound = false;
+    if(this.state.clientes.length > 0)
+    {
+      clientFound = this.state.clientes.includes(cardId);
+    }
+
+    return clientFound;
+  }
+
+  addPassenger(passenger){
     let newData = this.state.listViewData;
-    newData.unshift(passanger)
+    newData.unshift(passenger)
     this.setState({
       counter: this.state.counter+1,
       listViewData: newData
