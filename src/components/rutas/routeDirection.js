@@ -10,7 +10,10 @@ import {
 import styles from '../../themes/styles';
 import mystyles from './styles';
 import{
-  Container
+  Container,
+  Header,
+  Title,
+  Button
 } from 'native-base';
 import {
   Actions
@@ -33,8 +36,14 @@ class RouteDirection extends React.Component {
   }
   render(){
     return (
-      <Container style={mystyles.container}>
-        <View style={{alignItems:'center'}}>
+      <Container>
+        <Header style={styles.navBar}>
+					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
+						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
+					</Button>
+					<Title style={styles.navBarTitle}>{'Dirección'}</Title>
+				</Header>
+        <View style={[{alignItems:'center'},mystyles.container]}>
           <Grid>
             <Row style={mystyles.rowBuses}>
               <TouchableOpacity style={{width: deviceWidth}} onPress={this.HandleButton.bind(this, this.props.rutaId, "entrada",this.props.routeName )}>
