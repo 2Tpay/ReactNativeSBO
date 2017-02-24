@@ -1,6 +1,6 @@
 import Ajax from 'ajax-promise-es6';
 
-var my_path = 'http://0563ef20.ngrok.io/';
+var my_path = 'http://d8927ddf.ngrok.io/';
 
 var ACCESS_TOKEN = '';
 
@@ -52,7 +52,7 @@ export function logout(){
 }
 
 export function getRoutes(){
-  return fetch(`${my_path}api/Rutas`, {
+  return fetch(`${my_path}api/Rutas?filter={"limit": 30}`, {
   method: 'GET',
   headers: {
     'Accept': 'application/json',

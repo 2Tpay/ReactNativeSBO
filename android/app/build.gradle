@@ -98,7 +98,7 @@ android {
     }
     signingConfigs {
       release {
-        storeFile file("../.gradle/gradle.properties")
+        storeFile file("my-release-key.keystore")
         storePassword "admin123"
         keyAlias "my-key-alias"
         keyPassword "admin123"
