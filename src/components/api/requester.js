@@ -1,6 +1,6 @@
 import Ajax from 'ajax-promise-es6';
 
-var my_path = 'http://d8927ddf.ngrok.io/';
+var my_path = 'http://fiasps.unitec.edu:8060/';
 
 var ACCESS_TOKEN = '';
 
@@ -52,7 +52,7 @@ export function logout(){
 }
 
 export function getRoutes(){
-  return fetch(`${my_path}api/Rutas?filter={"limit": 30}`, {
+  return fetch(`${my_path}api/Rutas?filter={"limit": 40}`, {
   method: 'GET',
   headers: {
     'Accept': 'application/json',

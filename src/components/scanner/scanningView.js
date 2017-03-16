@@ -45,6 +45,7 @@ class ScanningView extends React.Component {
       listViewData: [],
       tripClients: []
     };
+    this.handleFinishButton = this.handleFinishButton.bind(this);
   }
 
   deleteRow(secId, rowId, rowMap) {
@@ -124,10 +125,6 @@ class ScanningView extends React.Component {
   		}).catch(error =>{alert(`Error al cargar info de clientes \n${error.message}`)});
 
       //NFC events
-      DeviceEventEmitter.addListener('onTagError', function (e) {
-          console.log('error', e)
-      });
-
       DeviceEventEmitter.addListener('onTagDetected', (e) => {
           let cardId = e.id;
           let traveller = this.searchClientByCardId(cardId);
@@ -137,7 +134,6 @@ class ScanningView extends React.Component {
             this.playClientAlreadyExistsSound();
           }
           this.addPassenger(cardId, traveller);
-          // Alert.alert("Isaula: " + cardId);
       });
   }
 
@@ -212,7 +208,7 @@ class ScanningView extends React.Component {
       						rightOpenValue={-75}
       					/>
             </View>
-            <TouchableHighlight style={styles.touchable} onPress={this.handleFinishButton.bind(this)}>
+            <TouchableHighlight style={styles.touchable} onPress={this.handleFinishButton}>
               <Text style={styles.touchableText}>Terminar</Text>
             </TouchableHighlight>
         </View>
