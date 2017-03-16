@@ -101,7 +101,7 @@ class Home extends React.Component {
 				.then(files =>{
 					files.forEach((file) =>{
 						//unlink(file.name);
-						alert(file.name);
+						alert("Enviando transacciones de un viaje.");
 						read('trips/'+file.name)
 						.then((trip)=>{
 							  postTransaction(trip.idRuta, trip.fecha, trip.busPlaca, trip.tipoMovimiento, trip.transacciones)

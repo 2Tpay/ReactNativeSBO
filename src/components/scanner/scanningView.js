@@ -28,13 +28,9 @@ import { read, write, exist, mkdir } from '../FileSystem/fileSystem';
 import { getTagId } from 'nfc-react-native';
 const Sound = require('react-native-sound');
 
-// const requireAudio = require('./button_beep_tone.mp3');
-
-// import { Sound } from 'react-native-sound';
-
 import globalStyles from '../../themes/styles'
 import styles from './styles';
-import { SwipeListView,SwipeRow } from 'react-native-swipe-list-view';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 class ScanningView extends React.Component {
   constructor(){
     super();
@@ -64,7 +60,6 @@ class ScanningView extends React.Component {
   playClientDetectedSound () {
     const s = new Sound('button_beep_tone.mp3', Sound.MAIN_BUNDLE, (e) => {
       if (e) {
-        console.log('error', e);
       } else {
         s.setSpeed(1);
         s.play(() => s.release()); // Release when it's done so we're not using up resources
@@ -75,7 +70,6 @@ class ScanningView extends React.Component {
   playClientAlreadyExistsSound () {
     const s = new Sound('beep_tone.mp3', Sound.MAIN_BUNDLE, (e) => {
       if (e) {
-        console.log('error', e);
       } else {
         s.setSpeed(1);
         s.play(() => s.release()); // Release when it's done so we're not using up resources
@@ -105,7 +99,7 @@ class ScanningView extends React.Component {
           write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
       }
     })
-    .catch(error => {console.log(error);});
+    .catch(error => {});
   }
 
   handleFinishButton(){
@@ -142,7 +136,6 @@ class ScanningView extends React.Component {
   }
 
   searchClientByCardId(cardId){
-    let clientFound;
     if(this.state.clientes.length > 0)
     {
       let clientFoundArray = this.state.clientes.filter( client => client.id_tarjeta == cardId);

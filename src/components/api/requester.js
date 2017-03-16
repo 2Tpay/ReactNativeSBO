@@ -110,7 +110,7 @@ export function postTransaction(routeId, date, routePlate, routeDirection, passe
     body:  JSON.stringify(params)
   })
   .then((response) => { return response.json()})
-  .catch((error) => {console.log(`error: ${error}`);});
+  .catch((error) => {alert(`error: ${error}`);});
 }
 
 
