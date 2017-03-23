@@ -40,7 +40,7 @@ class Home extends React.Component {
 			isLoading: false,
 			isConnected: false
 		}
-		this.filesAmount = 0;
+
 		this.navigate = this.navigate.bind(this);
 	}
 
@@ -87,8 +87,8 @@ class Home extends React.Component {
 
 		let passengers = [];
 		getCardsInformation().then(res => {
-			passengers = res;
-			write('cardsInformation.txt', JSON.stringify(passengers.getWithClient));
+			passengers= res;
+			write('cardsInformation.txt',JSON.stringify(passengers.getWithClient));
 		})
 		.catch(error => {alert(`ERROR AL SYNC TARJETAS \n${error}`)});
 
@@ -96,28 +96,30 @@ class Home extends React.Component {
 
 		exist('trips')
 		.then((res) =>{
-			if(res === true){
+			if(res===true){
 				readDir('trips')
 				.then(files =>{
-					this.filesAmount = 0;
 					files.forEach((file) =>{
 						//unlink(file.name);
+						alert("Enviando transacciones de un viaje.");
 						read('trips/'+file.name)
 						.then((trip)=>{
-								alert("Ijuepucha:" + JSON.stringify(trip));
 							  postTransaction(trip.idRuta, trip.fecha, trip.busPlaca, trip.tipoMovimiento, trip.transacciones)
-								.then((response) => {alert("response, supposedly"); ++this.filesAmount; unlink('trips/'+file.name);})
+								.then((response) => {unlink('trips/'+file.name);})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
 						});
-
 					});
-					alert(`Enviando transacciones de ${this.filesAmount} viajes.`);
 					//unlink('trips');
 				})
-				.catch(error => {alert(error);});
+				.catch(error => {console.log(error);});
 			}
 			alert("Se han actualizado los datos de rutas, clientes, y subido los viajes pendientes.");
 		});
+		//console.log(RNFS.ExternalStorageDirectoryPath);
+		//console.log(RNFS.ExternalDirectoryPath);
+
+		//unlink('trips');
+
 		this.state.isLoading = false;
 	}
 

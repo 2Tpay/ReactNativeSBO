@@ -1,7 +1,7 @@
 import Ajax from 'ajax-promise-es6';
 
-// var my_path = 'http://fiasps.unitec.edu:8060/';
-let my_path = 'http://1a4be0bd.ngrok.io/';
+var my_path = 'http://1a4be0bd.ngrok.io/';
+
 var ACCESS_TOKEN = '';
 
 export function setAccessToken(id){
@@ -26,8 +26,10 @@ export function login(email, password){
         return res.json()
     })
     .then( (res) =>{
-      const returnValue = res.id? res: 'Error de autenticacion';
-      return returnValue;
+      //console.log(res);
+      const returnValue = res.id? res: 'Error de autenticacion'
+      //console.log(returnValue);
+      return returnValue
     })
     .catch((error) => {
       alert(error.message)
@@ -72,7 +74,7 @@ export function getCardsInformation(){
     }
   })
   .then((response) => {return response.json()})
-  .catch((error) => {alert(error);});
+  .catch((error) => {console.log(error);});
 }
 
 export function postTransaction(routeId, date, routePlate, routeDirection, passengers){
@@ -83,8 +85,21 @@ export function postTransaction(routeId, date, routePlate, routeDirection, passe
     tipoMovimiento: routeDirection,
     transacciones: passengers
   }
-  alert(JSON.stringify(params));
-  confirm(JSON.stringify(params));
+
+  // alert(JSON.stringify(params));
+
+// export function postTransaction(routeId, date,routePlate, routeDirection, passengers){
+//     let array = [];
+//     passengers.forEach((passenger) =>{
+//       array.push(passenger.idTarjeta);
+//     });
+//     let params = {
+//       idRuta: routeId,
+//       fecha: new Date(date).toISOString(),
+//       busPlaca: routePlate,
+//       tipoMovimiento: routeDirection,
+//       transacciones: array
+//     }
   return fetch(`${my_path}api/Viajes/postVariousTransactions`, {
     method:'POST',
     headers: {
@@ -97,6 +112,3 @@ export function postTransaction(routeId, date, routePlate, routeDirection, passe
   .then((response) => { return response.json()})
   .catch((error) => {alert(`error: ${error}`);});
 }
-
-
-//'multipart/form-data'
