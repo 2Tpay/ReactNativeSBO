@@ -147,9 +147,13 @@ class ScanningView extends React.Component {
   rewriteNavigator(){
     BackAndroid.addEventListener('hardwareBackPress', () => {
       if (this.props.navigator) {
+        let currentRoutes = this.props.navigator.getCurrentRoutes();
+        let current= currentRoutes[currentRoutes.length-1].name;
+        if(current !=='home'){
           this.cleanResources();
           this.props.navigator.pop();
           return true;
+        }
       }
 
       return false;
