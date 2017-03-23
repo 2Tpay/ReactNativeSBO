@@ -115,17 +115,19 @@ class Home extends React.Component {
 				.then(files =>{
 					files.forEach((file) =>{
 						//unlink(file.name);
-						alert("Enviando transacciones de un viaje.");
 						read('trips/'+file.name)
 						.then((trip)=>{
 							  postTransaction(trip.idRuta, trip.fecha, trip.busPlaca, trip.tipoMovimiento, trip.transacciones)
-								.then((response) => {unlink('trips/'+file.name);})
+								.then((response) => {
+									alert("Enviando transacciones de un viaje.");
+									unlink('trips/'+file.name);
+								})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
 						});
 					});
 					//unlink('trips');
 				})
-				.catch(error => {console.log(error);});
+				.catch(error => {alert(error);});
 			}
 			alert("Se han actualizado los datos de rutas, clientes, y subido los viajes pendientes.");
 		});

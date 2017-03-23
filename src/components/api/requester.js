@@ -26,9 +26,9 @@ export function login(email, password){
         return res.json()
     })
     .then( (res) =>{
-      //console.log(res);
+      //alert(res);
       const returnValue = res.id? res: 'Error de autenticacion'
-      //console.log(returnValue);
+      //alert(returnValue);
       return returnValue
     })
     .catch((error) => {
@@ -46,9 +46,9 @@ export function logout(){
     }
   })
     .then( (res) =>{
-      console.log(res);
+      alert(res);
       return res
-    }).catch((error) => {console.log(error.message)})
+    }).catch((error) => {alert(error.message)})
 }
 
 export function getRoutes(){
@@ -61,7 +61,7 @@ export function getRoutes(){
   }
 })
 .then((response) => {return response.json()})
-.catch((error) => {console.log(error);});
+.catch((error) => {alert(error);});
 }
 
 export function getCardsInformation(){
@@ -74,7 +74,7 @@ export function getCardsInformation(){
     }
   })
   .then((response) => {return response.json()})
-  .catch((error) => {console.log(error);});
+  .catch((error) => {alert(error);});
 }
 
 export function postTransaction(routeId, date, routePlate, routeDirection, passengers){
