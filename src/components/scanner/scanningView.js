@@ -24,7 +24,7 @@ import {
 	Actions,
 } from 'react-native-router-flux';
 
-import { read } from '../FileSystem/fileSystem';
+import { read, write, exist, mkdir } from '../FileSystem/fileSystem';
 import { getTagId } from 'nfc-react-native';
 const Sound = require('react-native-sound');
 
@@ -42,22 +42,21 @@ class ScanningView extends React.Component {
     this.state = {
       counter : 0,
       clientes: [],
-      listViewData: []//Array(10).fill('').map((_,i)=>`item #${i}`)
+      listViewData: [],
+      tripClients: []
     };
-
-    AsyncStorage.getItem("text").then((value) => {
-      this.setState({text: value});
-    }).done();
   }
 
   deleteRow(secId, rowId, rowMap) {
 		rowMap[`${secId}${rowId}`].closeRow();
 		let newData = [...this.state.listViewData];
 		newData.splice(rowId, 1);
+    this.state.tripClients.splice(rowId, 1);
 		this.setState({
       counter: this.state.counter-1,
       clientes: this.state.clientes,
-      listViewData: newData
+      listViewData: newData,
+      tripClients: this.state.tripClients
     });
   }
 
@@ -83,7 +82,33 @@ class ScanningView extends React.Component {
     });
   };
 
+  writeTripsFile(){
+    let jsonTransaction = {
+      idRuta: this.props.routeId,
+      fecha: new Date().getTime(),
+      busPlaca: this.state.busPlate,
+      tipoMovimiento: this.props.routeDirection,
+      transacciones: this.state.tripClients
+    };
+
+    exist('trips')
+    .then(response =>{
+      if(!response) {
+        mkdir('trips')
+        .then(response => {
+          if(response){
+              write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+          }
+        });
+      }else{
+          write(`trips/${new Date().getTime()}.txt`, JSON.stringify(jsonTransaction));
+      }
+    })
+    .catch(error => {console.log(error);});
+  }
+
   handleFinishButton(){
+    this.writeTripsFile();
     this.props.navigator.popN(4);
   }
 
@@ -93,7 +118,8 @@ class ScanningView extends React.Component {
   			this.setState({
           counter: this.state.counter,
           clientes: success,
-          listViewData: this.state.listViewData
+          listViewData: this.state.listViewData,
+          tripClients: this.state.tripClients
         });
   		}).catch(error =>{alert(`Error al cargar info de clientes \n${error.message}`)});
 
@@ -104,52 +130,46 @@ class ScanningView extends React.Component {
 
       DeviceEventEmitter.addListener('onTagDetected', (e) => {
           let cardId = e.id;
-          if(this.searchClientByCardId(cardId)){
+          let traveller = this.searchClientByCardId(cardId);
+          if(!this.clientAlreadyAdded(cardId)){
             this.playClientDetectedSound();
           } else {
             this.playClientAlreadyExistsSound();
           }
-          this.addPassenger(cardId);
-          Alert.alert("Isaula: " + cardId);
+          this.addPassenger(cardId, traveller);
+          // Alert.alert("Isaula: " + cardId);
       });
   }
 
+  clientAlreadyAdded(cardId){
+    return this.state.tripClients.includes(cardId);
+  }
+
   searchClientByCardId(cardId){
-    let clientFound = false;
+    let clientFound;
     if(this.state.clientes.length > 0)
     {
       let clientFoundArray = this.state.clientes.filter( client => client.id_tarjeta == cardId);
 
-      clientFound = clientFoundArray.length > 0;
+      if(clientFoundArray.length > 0){
+        return clientFoundArray[0];
+      }
     }
 
-    return clientFound;
+    return 'undefined';
   }
 
-  addPassenger(passenger){
+  addPassenger(cardId, passenger){
     let newData = this.state.listViewData;
-    newData.unshift(passenger)
+    let newPassenger = passenger !== 'undefined' ? passenger.nombres : cardId;
+    newData.unshift(newPassenger);
+    this.state.tripClients.unshift(cardId);
     this.setState({
       counter: this.state.counter+1,
       clientes: this.state.clientes,
-      listViewData: newData
+      listViewData: newData,
+      tripClients: this.state.tripClients
     });
-  }
-
-  searchUserByCarnet(carnet){
-      if(carnet != ''){
-       searchUser(carnet)
-        .then(response => {
-          if(response.length<=0){
-            alert("Carnet numero: "+ carnet+" no se ha encontrado");
-          }else{
-            this.addPassenger(response)
-          }
-        })
-        .catch((error) => {
-          throw error;
-        });
-      }
   }
 
   render(){

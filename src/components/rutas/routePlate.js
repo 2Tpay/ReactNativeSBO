@@ -43,13 +43,11 @@ class RoutePlate extends React.Component {
       routeName: this.props.routeName
     });*/
     /*let jsonTransaction = {
-      routeId: this.props.rutaId,
-      routeDirection: this.props.routeDirection,
-      busPlate: this.state.busPlate,
-      routeName: this.props.routeName,
-      date: new Date().getTime(),
-      state: 'available',
-      passengers:[
+      idRuta: this.props.routeId,
+      fecha: new Date().getTime(),
+      busPlaca: this.state.busPlate,
+      tipoMovimiento: this.props.routeDirection,
+      transacciones:[
         {
           idTarjeta: 2
         },

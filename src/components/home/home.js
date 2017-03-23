@@ -65,7 +65,7 @@ class Home extends React.Component {
 			write('cardsInformation.txt',JSON.stringify(passengers.getWithClient));
 		})
 		.catch(error => {alert(`ERROR AL SYNC TARJETAS \n${error}`)});
-		
+
 
 		/*-----------POSTING------------*/
 
@@ -118,12 +118,11 @@ class Home extends React.Component {
 						console.log(file.name);
 						read('trips/'+file.name)
 						.then((trip)=>{
-							if(trip.state==='available'){
-
-								postTransaction(trip.routeId, trip.date,trip.busPlate, trip.routeDirection,trip.passengers)
-								.then((response) => {unlink('trips/'+file.name);})
+							//if(trip.state==='available'){
+								postTransaction(trip.idRuta, trip.fecha,trip.busPlaca, trip.tipoMovimiento,trip.transacciones)
+								.then((response) => {console.log(response);unlink('trips/'+file.name);})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
-							}
+							//}
 
 						});
 					});

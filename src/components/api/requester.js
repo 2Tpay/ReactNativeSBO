@@ -87,17 +87,18 @@ export function getCardsInformation(){
 }
 
 export function postTransaction(routeId, date,routePlate, routeDirection, passengers){
-    let array = [];
+    /*let array = [];
     passengers.forEach((passenger) =>{
       array.push(passenger.idTarjeta);
-    });
+    });*/
     let params = {
       idRuta: routeId,
       fecha: new Date(date).toISOString(),
       busPlaca: routePlate,
       tipoMovimiento: routeDirection,
-      transacciones: array
+      transacciones: passengers
     }
+    console.log(params);
     //console.log("aqui=>", params);
     //console.log(JSON.stringify(params));
   /*Ajax.post('http://5eeba7fb.ngrok.io/api/Viajes/postVariousTransactions',params,{
@@ -109,6 +110,7 @@ export function postTransaction(routeId, date,routePlate, routeDirection, passen
   })
   .catch(error => {console.log('errodfgr: ',error);});
 */
+  /*
   return fetch(`${my_path}api/Viajes/postVariousTransactions`, {
     method:'POST',
     headers: {
@@ -119,7 +121,7 @@ export function postTransaction(routeId, date,routePlate, routeDirection, passen
     body:  JSON.stringify(params)
   })
   .then((response) => {console.log("intento");return response.json()})
-  .catch((error) => {console.log(`error: ${error}`);});
+  .catch((error) => {console.log(`error: ${error}`);});*/
 }
 
 
