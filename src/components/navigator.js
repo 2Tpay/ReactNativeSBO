@@ -31,19 +31,20 @@ export default class Routing extends Component {
       return false;
     });
   }
-  logoutUser(){
-    /*logout()
+  logoutUser(n){
+    logout()
     .then((response) => {
       console.log(response);
-    }).catch( (error) => {console.log(error.message)})*/
-    console.log("LOG OUT");
+    }).catch( (error) => {console.log(error.message)})
+    //console.log("LOG OUT");
+    this.navigator.popN(n)
   }
   renderScene(route, navigator){
     switch (route.name) {
       case 'login':
         return <Login navigator={navigator} {...route.passProps}/>
       case 'home':
-        return <Home navigator={navigator} logout={this.logoutUser} {...route.passProps}/>
+        return <Home navigator={navigator} logout={this.logoutUser.bind(this,1)} {...route.passProps}/>
       case 'rutasView':
         return <RutasView navigator={navigator} {...route.passProps} />
       case 'routeDirection':

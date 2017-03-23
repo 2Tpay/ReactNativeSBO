@@ -22,6 +22,7 @@ module.exports = StyleSheet.create({
     backgroundColor: '#FBFAFA',
   },
   navBar: {
+    zIndex:999,
     backgroundColor: '#2b3b5e',
     elevation: 10,
     flex:0

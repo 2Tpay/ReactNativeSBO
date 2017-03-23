@@ -101,9 +101,6 @@ class RoutePlate extends React.Component {
     return (
       <Container>
         <Header style={globalStyles.navBar}>
-					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
-						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
-					</Button>
 					<Title style={globalStyles.navBarTitle}>{'Información de Bus'}</Title>
 				</Header>
         <View style={styles.container}>

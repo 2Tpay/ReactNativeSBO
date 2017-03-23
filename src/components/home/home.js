@@ -19,7 +19,10 @@ import {
 	Container,
 	Icon,
 	Header,
-	Title
+	Title,
+	Left,
+	Body,
+	Right
 } from 'native-base'
 
 import {
@@ -137,6 +140,7 @@ class Home extends React.Component {
 		this.state.isLoading = false;
 	}
 
+
 	render(){
 		let spinner = this.state.isLoading ?
     ( <ActivityIndicator
@@ -157,7 +161,7 @@ class Home extends React.Component {
 		return (
 			<Container>
 				<Header style={styles.navBar}>
-					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
+					<Button transparent onPress={() => this.props.logout()}>
 						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
 					</Button>
 					<Title style={styles.navBarTitle}>{'Home'}</Title>
@@ -181,7 +185,7 @@ class Home extends React.Component {
 						<View style={style_bar }><Text style={styles.text}>{this.state.isConnected?'Online':'Offline'}</Text></View>
 						{ spinner }
 				</View>
-		</Container>
+			</Container>
 		);
 	}
 }
