@@ -1,6 +1,7 @@
 import Ajax from 'ajax-promise-es6';
 
-var my_path = 'http://1a4be0bd.ngrok.io/';
+var my_path = 'http://fiasps.unitec.edu:8060/'; 
+//'http://1a4be0bd.ngrok.io/';
 
 var ACCESS_TOKEN = '';
 

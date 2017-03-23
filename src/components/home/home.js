@@ -45,18 +45,32 @@ class Home extends React.Component {
 	}
 
 	setIsConnected(isConnected){
-		this.state.isConnected = isConnected;
+		this.setState(
+			{
+				rutas :this.state.rutas,
+				isLoading: this.state.isLoading,
+				isConnected: isConnected
+			}
+		)
+		//this.state.isConnected = isConnected;
+		//console.log("is conected "+isConnected);
 		if(!isConnected){
 			alert("Se ha perdido la conexión del internet.");
 		}
 	}
 
-	componentDidMount() {
-	  const dispatchConnected = isConnected => (this.setIsConnected(isConnected));
+	componentWillMount() {
+		const dispatchConnected = isConnected => (this.setIsConnected(isConnected));
 
 	  NetInfo.isConnected.fetch().then(
 			isConnected => {
-			this.state.isConnected = isConnected;
+				this.setState(
+					{
+						rutas :[],
+						isLoading: false,
+						isConnected: isConnected
+					}
+				)
 			}
 		 ).done(() => {
 	    NetInfo.isConnected.addEventListener('change', dispatchConnected);
@@ -128,7 +142,18 @@ class Home extends React.Component {
     ( <ActivityIndicator
         size='large'/> ) :
     ( <View/>);
-
+		let style_bar;
+		if(this.state.isConnected){
+			style_bar = {
+				backgroundColor:'green',
+				alignItems:'center'
+			};
+		}else{
+			style_bar = {
+				backgroundColor:'red',
+				alignItems:'center'
+			};
+		}
 		return (
 			<Container>
 				<Header style={styles.navBar}>
@@ -152,9 +177,9 @@ class Home extends React.Component {
 							</Button>
 
 						</View>
-
-						{ spinner }
 					</Content>
+						<View style={style_bar }><Text style={styles.text}>{this.state.isConnected?'Online':'Offline'}</Text></View>
+						{ spinner }
 				</View>
 		</Container>
 		);

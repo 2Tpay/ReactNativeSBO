@@ -26,6 +26,11 @@ module.exports = StyleSheet.create({
     elevation: 10,
     flex:0
   },
+  text:{
+		margin:5,
+		fontSize:15,
+    color: '#fff'
+	},
   navBarTitle:{
     color : "#FFF"
   },
