@@ -42,6 +42,7 @@ class ScanningView extends React.Component {
       tripClients: []
     };
     this.handleFinishButton = this.handleFinishButton.bind(this);
+    this.tagEvent = undefined;
   }
 
   deleteRow(secId, rowId, rowMap) {
@@ -104,6 +105,11 @@ class ScanningView extends React.Component {
 
   handleFinishButton(){
     this.writeTripsFile();
+    this.setState({
+      clientes: [],
+      tripClients: []
+    });
+    this.tagEvent.remove();
     this.props.navigator.popN(4);
   }
 
@@ -119,10 +125,10 @@ class ScanningView extends React.Component {
   		}).catch(error =>{alert(`Error al cargar info de clientes \n${error.message}`)});
 
       //NFC events
-      DeviceEventEmitter.addListener('onTagDetected', (e) => {
+      this.tagEvent = DeviceEventEmitter.addListener('onTagDetected', (e) => {
           let cardId = e.id;
           let traveller = this.searchClientByCardId(cardId);
-          if(!this.clientAlreadyAdded(cardId)){
+          if(traveller !== 'undefined' && !this.clientAlreadyAdded(traveller.id)){
             this.playClientDetectedSound();
           } else {
             this.playClientAlreadyExistsSound();
@@ -138,7 +144,7 @@ class ScanningView extends React.Component {
   searchClientByCardId(cardId){
     if(this.state.clientes.length > 0)
     {
-      let clientFoundArray = this.state.clientes.filter( client => client.id_tarjeta == cardId);
+      let clientFoundArray = this.state.clientes.filter( client => client.id_tarjeta.toLowerCase() == cardId.toLowerCase());
 
       if(clientFoundArray.length > 0){
         return clientFoundArray[0];
@@ -150,9 +156,13 @@ class ScanningView extends React.Component {
 
   addPassenger(cardId, passenger){
     let newData = this.state.listViewData;
-    let newPassenger = passenger !== 'undefined' ? passenger.nombres : cardId;
+    if(passenger === 'undefined'){
+      alert("La tarjeta del pasajero no ha sido detectada en la lista.");
+      return;
+    }
+    let newPassenger = passenger.nombres;
     newData.unshift(newPassenger);
-    this.state.tripClients.unshift(cardId);
+    this.state.tripClients.unshift(passenger.id);
     this.setState({
       counter: this.state.counter+1,
       clientes: this.state.clientes,
