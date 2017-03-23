@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, TextInput, TouchableOpacity, Text,StatusBar} from 'react-native';
+import {StyleSheet, View, TextInput, TouchableOpacity, Text, ActivityIndicator, StatusBar} from 'react-native';
 import {login, setAccessToken} from "../api/requester"
 import {
 	Actions,
@@ -11,44 +11,51 @@ export default class LoginForm extends Component {
     this.state ={
       name: "",
       password: "",
-      errors: ""
+      errors: "",
+			isLoading: false
     }
   }
 
-handleSubmitButton(){
-	if(this.state.name !=""){
-		if(this.state.password !=""){
-			login(this.state.name, this.state.password)
-			.then((response) => {
-				if(response.id){
-					setAccessToken(response.id);
-					this.setState({errors:""})
-					this.props.navigator.push({name:'home'});
-				}else
-					this.setState({errors:response})
-			})
-			.catch((error) => {this.setState({errors:error.message}); console.log(error.message);})
+	handleSubmitButton(){
+		// this.isLoading = true;
+		this.setState({
+			name: this.state.name,
+			password: this.state.password,
+			errors: this.state.errors,
+			isLoading: true
+		});
+		if(this.state.name != ""){
+			if(this.state.password != ""){
+				login(this.state.name, this.state.password)
+				.then((response) => {
+					if(response.id){
+						setAccessToken(response.id);
+						this.props.navigator.push({name:'home'});
+						this.setState({errors:"", isLoading: false})
+					}else
+						this.setState({errors:response, isLoading: false})
+				})
+				.catch((error) => {this.setState({errors:error.message, isLoading: false}); alert(error.message);})
+			}else{
+					this.setState({errors:"Contraseña no puede estar vacio", isLoading: false})
+			}
 		}else{
-				this.setState({errors:"Contraseña no puede estar vacio"})
+			this.setState({errors:"Email no puede estar vacio", isLoading: false})
 		}
-	}else{
-		this.setState({errors:"Email no puede estar vacio"})
 	}
-	/*this.props.navigator.push({
-		name:'home',
-		passProps:{
-			title:'Home'
-		}
-	});*/
-  //Actions.home();
-}
-  render(){
+
+	render(){
+		let spinner = this.state.isLoading ?
+    ( <ActivityIndicator
+        size='large'/> ) :
+    ( <View/>);
+
     return (
       <View style={styles.container}>
         <StatusBar
             barStyle="light-content"
           />
-				<Text style={styles.errorLabel}>{this.state.errors?this.state.errors :""}</Text>
+				<Text style={styles.errorLabel}>{this.state.errors ? this.state.errors : ""}</Text>
         <TextInput
           placeholder="email"
           placeholderTextColor="rgba(255,255,255,0.7)"
@@ -69,11 +76,13 @@ handleSubmitButton(){
           ref={(input) => this.passwordInput = input}
           onChangeText={(text) => this.setState({password:text})}
           />
-        <TouchableOpacity style={styles.buttonContainer} onPress={this.handleSubmitButton.bind(this)}>
+				<TouchableOpacity disabled={this.state.isLoading} style={styles.buttonContainer} onPress={this.handleSubmitButton.bind(this)}>
           <Text style={styles.buttonText}>
             LOGIN
           </Text>
         </TouchableOpacity>
+
+			{ spinner }
       </View>
     );
   }

@@ -45,18 +45,32 @@ class Home extends React.Component {
 	}
 
 	setIsConnected(isConnected){
-		this.state.isConnected = isConnected;
+		this.setState(
+			{
+				rutas :this.state.rutas,
+				isLoading: this.state.isLoading,
+				isConnected: isConnected
+			}
+		)
+		//this.state.isConnected = isConnected;
+		//console.log("is conected "+isConnected);
 		if(!isConnected){
 			alert("Se ha perdido la conexión del internet.");
 		}
 	}
 
-	componentDidMount() {
-	  const dispatchConnected = isConnected => (this.setIsConnected(isConnected));
+	componentWillMount() {
+		const dispatchConnected = isConnected => (this.setIsConnected(isConnected));
 
 	  NetInfo.isConnected.fetch().then(
 			isConnected => {
-			this.state.isConnected = isConnected;
+				this.setState(
+					{
+						rutas :[],
+						isLoading: false,
+						isConnected: isConnected
+					}
+				)
 			}
 		 ).done(() => {
 	    NetInfo.isConnected.addEventListener('change', dispatchConnected);
@@ -101,17 +115,19 @@ class Home extends React.Component {
 				.then(files =>{
 					files.forEach((file) =>{
 						//unlink(file.name);
-						alert("Enviando transacciones de un viaje.");
 						read('trips/'+file.name)
 						.then((trip)=>{
 							  postTransaction(trip.idRuta, trip.fecha, trip.busPlaca, trip.tipoMovimiento, trip.transacciones)
-								.then((response) => {unlink('trips/'+file.name);})
+								.then((response) => {
+									alert("Enviando transacciones de un viaje.");
+									unlink('trips/'+file.name);
+								})
 								.catch(error => {alert(`Error al postear viaje ${file.name}\n${error}`)})
 						});
 					});
 					//unlink('trips');
 				})
-				.catch(error => {console.log(error);});
+				.catch(error => {alert(error);});
 			}
 			alert("Se han actualizado los datos de rutas, clientes, y subido los viajes pendientes.");
 		});
@@ -128,7 +144,18 @@ class Home extends React.Component {
     ( <ActivityIndicator
         size='large'/> ) :
     ( <View/>);
-
+		let style_bar;
+		if(this.state.isConnected){
+			style_bar = {
+				backgroundColor:'green',
+				alignItems:'center'
+			};
+		}else{
+			style_bar = {
+				backgroundColor:'red',
+				alignItems:'center'
+			};
+		}
 		return (
 			<Container>
 				<Header style={styles.navBar}>
@@ -152,9 +179,9 @@ class Home extends React.Component {
 							</Button>
 
 						</View>
-
-						{ spinner }
 					</Content>
+						<View style={style_bar }><Text style={styles.text}>{this.state.isConnected?'Online':'Offline'}</Text></View>
+						{ spinner }
 				</View>
 		</Container>
 		);
