@@ -22,7 +22,8 @@ export default class Routing extends Component {
   componentWillMount() {
     BackAndroid.addEventListener('hardwareBackPress', () => {
       if (this.navigator) {
-        let current= this.navigator.getCurrentRoutes()[this.navigator.getCurrentRoutes().length-1].name
+        let currentRoutes = this.navigator.getCurrentRoutes();
+        let current= currentRoutes[currentRoutes.length-1].name;
         if(current !=='home'){
           this.navigator.pop();
           return true;
@@ -31,13 +32,11 @@ export default class Routing extends Component {
       return false;
     });
   }
+
   logoutUser(){
-    /*logout()
-    .then((response) => {
-      console.log(response);
-    }).catch( (error) => {console.log(error.message)})*/
     console.log("LOG OUT");
   }
+
   renderScene(route, navigator){
     switch (route.name) {
       case 'login':

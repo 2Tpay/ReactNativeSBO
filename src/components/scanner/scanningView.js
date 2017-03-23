@@ -1,4 +1,5 @@
 import React from 'react';
+import {BackAndroid} from 'react-native';
 import {searchUser} from '../api/requester';
 import {
   View,
@@ -105,11 +106,7 @@ class ScanningView extends React.Component {
 
   handleFinishButton(){
     this.writeTripsFile();
-    this.setState({
-      clientes: [],
-      tripClients: []
-    });
-    this.tagEvent.remove();
+    this.cleanResources();
     this.props.navigator.popN(4);
   }
 
@@ -135,6 +132,28 @@ class ScanningView extends React.Component {
           }
           this.addPassenger(cardId, traveller);
       });
+
+      this.rewriteNavigator();
+  }
+
+  cleanResources(){
+    this.setState({
+      clientes: [],
+      tripClients: []
+    });
+    this.tagEvent.remove();
+  }
+
+  rewriteNavigator(){
+    BackAndroid.addEventListener('hardwareBackPress', () => {
+      if (this.props.navigator) {
+          this.cleanResources();
+          this.props.navigator.pop();
+          return true;
+      }
+
+      return false;
+    });
   }
 
   clientAlreadyAdded(cardId){
