@@ -38,9 +38,6 @@ class RouteDirection extends React.Component {
     return (
       <Container>
         <Header style={styles.navBar}>
-					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
-						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
-					</Button>
 					<Title style={styles.navBarTitle}>{'Dirección'}</Title>
 				</Header>
         <View style={[{alignItems:'center'},mystyles.container]}>

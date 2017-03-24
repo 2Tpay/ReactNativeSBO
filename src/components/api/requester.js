@@ -46,7 +46,7 @@ export function logout(){
     }
   })
     .then( (res) =>{
-      alert(res);
+      // console.log(res);
       return res
     }).catch((error) => {alert(error.message)})
 }

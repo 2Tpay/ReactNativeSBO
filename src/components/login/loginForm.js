@@ -30,6 +30,7 @@ export default class LoginForm extends Component {
 				.then((response) => {
 					if(response.id){
 						setAccessToken(response.id);
+						this.setState({name: '', password: '', errors: ''});
 						this.props.navigator.push({name:'home'});
 						this.setState({errors:"", isLoading: false})
 					}else
@@ -57,10 +58,12 @@ export default class LoginForm extends Component {
           />
 				<Text style={styles.errorLabel}>{this.state.errors ? this.state.errors : ""}</Text>
         <TextInput
+					ref={'emailTxt'}
           placeholder="email"
           placeholderTextColor="rgba(255,255,255,0.7)"
           returnKeyType="next"
           keyboardType="email-address"
+					value={this.state.name}
           onSubmitEditing={() => this.passwordInput.focus()}
           autoCapitalize="none"
           autoCorrect={false}
@@ -68,13 +71,16 @@ export default class LoginForm extends Component {
           onChangeText={(text) => this.setState({name: text})}
           />
         <TextInput
+					ref={'passTxt'}
           placeholder="Contraseña"
           secureTextEntry
           returnKeyType="go"
+					value={this.state.password}
           placeholderTextColor="rgba(255,255,255,0.7)"
           style={styles.input}
           ref={(input) => this.passwordInput = input}
           onChangeText={(text) => this.setState({password:text})}
+
           />
 				<TouchableOpacity disabled={this.state.isLoading} style={styles.buttonContainer} onPress={this.handleSubmitButton.bind(this)}>
           <Text style={styles.buttonText}>

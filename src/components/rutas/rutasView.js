@@ -39,9 +39,6 @@ class RutasView extends React.Component {
 		return (
 			<Container>
 				<Header style={styles.navBar}>
-					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
-						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
-					</Button>
 					<Title style={styles.navBarTitle}>{'Rutas'}</Title>
 				</Header>
 					<View style={mystyles.container}>

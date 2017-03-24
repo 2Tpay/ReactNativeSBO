@@ -33,8 +33,12 @@ export default class Routing extends Component {
     });
   }
 
-  logoutUser(){
-    console.log("LOG OUT");
+  logoutUser(n){
+    logout()
+    .then((response) => {
+      console.log(response);
+    }).catch( (error) => {console.log(error.message)})
+    this.navigator.popN(n)
   }
 
   renderScene(route, navigator){
@@ -42,7 +46,7 @@ export default class Routing extends Component {
       case 'login':
         return <Login navigator={navigator} {...route.passProps}/>
       case 'home':
-        return <Home navigator={navigator} logout={this.logoutUser} {...route.passProps}/>
+        return <Home navigator={navigator} logout={this.logoutUser.bind(this,1)} {...route.passProps}/>
       case 'rutasView':
         return <RutasView navigator={navigator} {...route.passProps} />
       case 'routeDirection':

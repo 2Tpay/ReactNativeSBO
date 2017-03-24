@@ -198,9 +198,6 @@ class ScanningView extends React.Component {
     return (
         <View style={styles.container}>
           <Header style={globalStyles.navBar}>
-  					<Button transparent onPress={() => this.props.reset(this.props.navigation.key)}>
-  						<Text style={{fontWeight:'800', color:'#FFF'}}>{'Salir'}</Text>
-  					</Button>
   					<Title style={globalStyles.navBarTitle}>{'Escaner'}</Title>
   				</Header>
             <Text style={globalStyles.title}>Ingreso de pasajeros</Text>
